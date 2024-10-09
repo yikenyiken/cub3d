@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/06 13:02:09 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/09 18:39:43 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@
 
 typedef struct s_ray
 {
-	double	angle;
-	int		ray_facing_up;
-	int		ray_facing_right;
 	double	x_intercept;
 	double	y_intercept;
 	double	x_step;
@@ -33,6 +30,7 @@ typedef struct s_ray
 	double	vert_intersect_y;
 	double	wall_hit_x;
 	double	wall_hit_y;
+	double	distance;
 }	t_ray;
 
 typedef struct s_data
@@ -60,6 +58,8 @@ typedef struct s_player
 	double		angle;
 	uint32_t	color;
 	int			radius;
+	double		move_step;
+	double		rotation_step;
 }	t_player;
 
 typedef struct s_mlx

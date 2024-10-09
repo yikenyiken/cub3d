@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/06 18:05:54 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/09 18:58:22 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ void	put_err(char *str)
 {
 	while (*str)
 		write(2, str++, 1);
+}
+
+double	max(double a, double b)
+{
+	if (a > b)
+		return (a);
+	return (b);
 }
 
 t_ray	*create_rays(t_data *data)
@@ -41,14 +48,15 @@ void	init_data(t_data *data, char **map)
 	data->map = map;
 	max_height = 720;
 	max_width = 1024;
-	data->tile_size = 64;
+	data->tile_size = 128;
 	data->rows = 10;
 	data->columns = 15;
 	data->fov = 60 * (M_PI / 180);
 	data->width = data->tile_size * data->columns;
 	data->height = data->tile_size * data->rows;
-	if (data->height > max_height || data->width > max_width)
-		(put_err("too large map\n"), exit(1));
+	// if (data->height > max_height || data->width > max_width)
+	// 	(put_err("too large map\n"), exit(1));
+	data->tile_size = 24;
 	data->num_rays = data->width;
 	data->rays = create_rays(data);
 }
@@ -61,11 +69,13 @@ void	set_player_xy(t_player *player, double x, double y)
 
 void	init_player(t_player *player, t_data *data)
 {
-	set_player_xy(player, data->width / 2, data->height / 2);
+	set_player_xy(player, data->tile_size * data->columns / 2, data->tile_size * data->rows / 2);
 
 	player->angle = M_PI / 2;
 	player->color = 0xFF0000FF;
-	player->radius = 10;
+	player->radius = 4;
+	player->move_step = 1;
+	player->rotation_step = 2 * (M_PI / 180);
 }
 
 void	render_frame_img(t_mlx *mlx, t_data *data)
@@ -97,15 +107,11 @@ int	is_wall_hit(t_mlx *mlx, double x, double y)
 
 void	update_player(t_mlx *mlx)
 {
-	int		move_step;
 	int		move_direction;
-	double	rotation_step;
 	double	new_x;
 	double	new_y;
 
-	move_step = 3;
 	move_direction = 0;
-	rotation_step = 4 * (M_PI / 180);
 
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W))
 		move_direction = 1;
@@ -114,13 +120,13 @@ void	update_player(t_mlx *mlx)
 		move_direction = -1;
 
     if (mlx_is_key_down(mlx->ptr, MLX_KEY_A))
-		mlx->player.angle += -rotation_step;
+		mlx->player.angle += -mlx->player.rotation_step;
 
     if (mlx_is_key_down(mlx->ptr, MLX_KEY_D))
-		mlx->player.angle += rotation_step;
+		mlx->player.angle += mlx->player.rotation_step;
 	
-	new_x = mlx->player.x + cos(mlx->player.angle) * move_step * move_direction;
-	new_y = mlx->player.y + sin(mlx->player.angle) * move_step * move_direction;
+	new_x = mlx->player.x + cos(mlx->player.angle) * mlx->player.move_step * move_direction;
+	new_y = mlx->player.y + sin(mlx->player.angle) * mlx->player.move_step * move_direction;
 
 	if (!is_wall_hit(mlx, new_x, new_y))
 		set_player_xy(&mlx->player, new_x, new_y);
@@ -134,55 +140,128 @@ double	normalize_angle(double angle)
 	return (angle);
 }
 
-void	set_horz_intersect_xy(t_ray *ray, t_mlx *mlx)
+void	set_horz_intersect_xy(t_ray *ray, double ray_angle, t_mlx *mlx)
 {
+
+	int 	ray_facing_up;
+	double	screen_width;
+	double	screen_height;
+
+	screen_width = mlx->data->tile_size * mlx->data->columns;
+	screen_height = mlx->data->tile_size * mlx->data->rows;
+
+	ray_facing_up = ray_angle > M_PI;
 	ray->horz_intersect_x = ray->x_intercept;
 	ray->horz_intersect_y = ray->y_intercept;
 
-	while ((ray->horz_intersect_x >= 0 && ray->horz_intersect_x <= mlx->data->width)
-		&& (ray->horz_intersect_y >= 0 && ray->horz_intersect_y <= mlx->data->height))
+	while ((ray->horz_intersect_x >= (double)0 && ray->horz_intersect_x <= screen_width)
+		&& (ray->horz_intersect_y >= (double)0 && ray->horz_intersect_y <= screen_height))
 	{
-		if (is_wall_hit(mlx, ray->horz_intersect_x, ray->horz_intersect_y - ray->ray_facing_up))
+		if (is_wall_hit(mlx, ray->horz_intersect_x, ray->horz_intersect_y - ray_facing_up))
 			break ;
 		ray->horz_intersect_x += ray->x_step;
 		ray->horz_intersect_y += ray->y_step;
 	}
 }
 
-void	find_horz_intersection(t_ray *ray, t_mlx *mlx)
+void	find_horz_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
 {
-	ray->ray_facing_up = ray->angle > M_PI;
-	ray->ray_facing_right = ray->angle < (M_PI / 2) || ray->angle > 3 * (M_PI / 2);
+	int	ray_facing_up;
+	int	ray_facing_right;
+
+	ray_facing_up = ray_angle > M_PI;
+	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
 
 	ray->y_intercept = floor(mlx->player.y / mlx->data->tile_size) * mlx->data->tile_size;
-	if (!ray->ray_facing_up)
+	if (!ray_facing_up)
 		ray->y_intercept += mlx->data->tile_size;
 
-	ray->x_intercept = mlx->player.x + (ray->y_intercept - mlx->player.y) / tan(ray->angle);
+	ray->x_intercept = mlx->player.x + (ray->y_intercept - mlx->player.y) / tan(ray_angle);
 
 	ray->y_step = mlx->data->tile_size;
-	if (ray->ray_facing_up)
+	if (ray_facing_up)
 		ray->y_step = -ray->y_step;
 	
-	ray->x_step = mlx->data->tile_size / tan(ray->angle);
-	if (ray->ray_facing_right && ray->x_step < 0)
+	ray->x_step = mlx->data->tile_size / tan(ray_angle);
+	if (ray_facing_right && ray->x_step < 0)
 		ray->x_step = -ray->x_step;
-	if (!ray->ray_facing_right && ray->x_step > 0)
+	if (!ray_facing_right && ray->x_step > 0)
 		ray->x_step = -ray->x_step;
-	set_horz_intersect_xy(ray, mlx);
+	set_horz_intersect_xy(ray, ray_angle, mlx);
 }
 
-// void	find_vert_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
-// {
-	
-// }
+void	set_vert_intersect_xy(t_ray *ray, double ray_angle, t_mlx *mlx)
+{
+	int		ray_facing_right;
+	double	screen_width;
+	double	screen_height;
+
+	screen_width = mlx->data->tile_size * mlx->data->columns;
+	screen_height = mlx->data->tile_size * mlx->data->rows;
+
+	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
+	ray->vert_intersect_x = ray->x_intercept;
+	ray->vert_intersect_y = ray->y_intercept;
+
+	while ((ray->vert_intersect_x >= (double)0 && ray->vert_intersect_x <= screen_width)
+		&& (ray->vert_intersect_y >= (double)0 && ray->vert_intersect_y <= screen_height))
+	{
+		if (is_wall_hit(mlx, ray->vert_intersect_x - !ray_facing_right, ray->vert_intersect_y))
+			break ;
+		ray->vert_intersect_x += ray->x_step;
+		ray->vert_intersect_y += ray->y_step;
+	}
+}
+
+void	find_vert_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
+{
+	int	ray_facing_up;
+	int	ray_facing_right;
+
+	ray_facing_up = ray_angle > M_PI;
+	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
+
+	ray->x_intercept = floor(mlx->player.x / mlx->data->tile_size) * mlx->data->tile_size;
+	if (ray_facing_right)
+		ray->x_intercept += mlx->data->tile_size;
+
+	ray->y_intercept = mlx->player.y + (ray->x_intercept - mlx->player.x) * tan(ray_angle);
+
+	ray->x_step = mlx->data->tile_size;
+	if (!ray_facing_right)
+		ray->x_step = -ray->x_step;
+
+	ray->y_step = mlx->data->tile_size * tan(ray_angle);
+	if (!ray_facing_up && ray->y_step < 0)
+		ray->y_step = -ray->y_step;
+	if (ray_facing_up && ray->y_step > 0)
+		ray->y_step = -ray->y_step;
+	set_vert_intersect_xy(ray, ray_angle, mlx);
+}
+
+double	distance_between_points(double x1, double y1, double x2, double y2)
+{
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+}
 
 void	cast_ray(t_ray *ray, double ray_angle, t_mlx *mlx)
 {
-	ray->angle = normalize_angle(ray_angle);
-	find_horz_intersection(ray, mlx);
-	// find_vert_intersection(ray, ray_angle, mlx);
-	//copare distances and choose the closest one
+	double	horz_distance;
+	double	vert_distance;
+
+	find_horz_intersection(ray, ray_angle, mlx);
+	find_vert_intersection(ray, ray_angle, mlx);
+	horz_distance = distance_between_points(mlx->player.x, mlx->player.y, ray->horz_intersect_x, ray->horz_intersect_y);
+	vert_distance = distance_between_points(mlx->player.x, mlx->player.y, ray->vert_intersect_x, ray->vert_intersect_y);
+	ray->distance = horz_distance;
+	ray->wall_hit_x = ray->horz_intersect_x;
+	ray->wall_hit_y = ray->horz_intersect_y; //
+	if (horz_distance > vert_distance)
+	{
+		ray->wall_hit_x = ray->vert_intersect_x; //
+		ray->wall_hit_y = ray->vert_intersect_y;
+		ray->distance = vert_distance;
+	}
 }
 
 void	cast_rays(t_mlx *mlx)
@@ -194,7 +273,7 @@ void	cast_rays(t_mlx *mlx)
 	i = 0;
 	while (i < mlx->data->num_rays)
 	{
-		cast_ray(mlx->data->rays + i, ray_angle, mlx);
+		cast_ray(mlx->data->rays + i, normalize_angle(ray_angle), mlx);
 		ray_angle += mlx->data->fov / mlx->data->num_rays;
 		i++;
 	}
@@ -262,31 +341,44 @@ void	draw_player(t_mlx *mlx)
 	}
 }
 
-void	draw_player_dir(t_mlx *mlx)
-{
-	double	x;
-	double	y;
-	int	scaler;
+// void	draw_player_dir(t_mlx *mlx)
+// {
+// 	double	x;
+// 	double	y;
+// 	int	scaler;
 
-	scaler = 30;
-	while (scaler)
-	{
-		x = mlx->player.x + cos(mlx->player.angle) * scaler;
-		y = mlx->player.y + sin(mlx->player.angle) * scaler;
-		mlx_put_pixel(mlx->img.frame, x, y, 0x0000FFFF);
-		scaler--;
-	}
-}
+// 	scaler = 30;
+// 	while (scaler)
+// 	{
+// 		x = mlx->player.x + cos(mlx->player.angle) * scaler;
+// 		y = mlx->player.y + sin(mlx->player.angle) * scaler;
+// 		mlx_put_pixel(mlx->img.frame, x, y, 0x0000FFFF);
+// 		scaler--;
+// 	}
+// }
 
 void	draw_ray(t_mlx *mlx, t_ray *ray)
 {
-	int	x;
-	int	y;
+	double	dx;
+	double	dy;
+	double	steps;
+	double	x_inc;
+	double	y_inc;
+	int		i;
 
-	x = mlx->player.x;
-	y = mlx->player.y;
-	while (x != ray->horz_intersect_x && y != ray->horz_intersect_y)
-		
+	dx = ray->wall_hit_x - mlx->player.x;
+	dy = ray->wall_hit_y - mlx->player.y;
+	steps = max(fabs(dx), fabs(dy));
+	x_inc = dx / steps;
+	y_inc = dy / steps;
+	i = 0;
+	while (i < round(steps))
+	{
+		int x = floor(mlx->player.x + (x_inc * i));
+		int y = floor(mlx->player.y + (y_inc * i));
+		mlx_put_pixel(mlx->img.frame, x, y, 0x00FF00FF);
+		i++;
+	}
 }
 
 void	draw_rays(t_mlx *mlx)
@@ -304,9 +396,9 @@ void	draw_rays(t_mlx *mlx)
 void	update_frame(t_mlx *mlx)
 {
 	draw_map(mlx);
-	draw_player(mlx);
-	draw_player_dir(mlx);
 	draw_rays(mlx);
+	draw_player(mlx);
+	// draw_player_dir(mlx);
 }
 
 void	game_loop(void *param)
