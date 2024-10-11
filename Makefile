@@ -24,7 +24,7 @@ clean:
 	@rm -rf $(LIBMLX)/build
 
 fclean: clean
-	@rm -rf $(NAME)
+	@rm -rf $(NAME) $(LIBMLX)
 
 re: clean all
 
