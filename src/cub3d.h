@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/10 12:55:28 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/13 16:19:42 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ typedef struct s_ray
 
 typedef struct s_data
 {
-	int		mini_map_tile_size;
-	int		screen_tile_size;
+	double	mini_map_tile_size;
+	double	screen_tile_size;
 	int		rows;
 	int		columns;
 	double	mini_map_width;
