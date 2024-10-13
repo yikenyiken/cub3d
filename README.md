@@ -1,1 +1,1 @@
-run `make install`
+run `make install` before running make
