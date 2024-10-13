@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/11 20:47:44 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/13 17:03:03 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,12 +383,13 @@ void	draw_rays(t_mlx *mlx)
 	}
 }
 
-void	draw_wall(t_mlx *mlx, int x, int y)
+void	draw_wall(t_mlx *mlx, int x, double y, double wall_strip_height)
 {
-	int	i;
+	double	i;
 
-	i = 0;
-	while (i < y)
+	i = y;
+	printf("WaStHi: %f, ScHi: %f\n", wall_strip_height, mlx->data->screen_height);
+	while (i < floor(y + wall_strip_height))
 	{
 		mlx_put_pixel(mlx->img.frame, x, i, 0x00FF00FF);
 		i++;
@@ -401,24 +402,26 @@ void	draw_walls(t_mlx *mlx)
 	double	wall_strip_height;
 	double	distance_projection_plane;
 
-	distance_projection_plane = (mlx->data->screen_width / 2) / tan(mlx->data->fov / 2);
+	distance_projection_plane = (mlx->data->screen_width / 2) / round(tan(mlx->data->fov / 2));
+	// printf("screen_width: %f\n", mlx->data->screen_width / 2);
+	// printf("tan(half fov): %f\n", tan(mlx->data->fov / 2));
 	i = 0;
 	while (i < mlx->data->num_rays)
 	{
-		wall_strip_height = mlx->data->screen_width / 2 - (mlx->data->rays + i)->distance;
-		printf("W_S_H: %f\n", mlx->data->screen_height);
-		draw_wall(mlx, i, floor(wall_strip_height));
+		wall_strip_height = (mlx->data->mini_map_tile_size / (mlx->data->rays + i)->distance) * distance_projection_plane;
+		// printf("%f / %f * %f\n", mlx->data->mini_map_tile_size, mlx->data->rays[i].distance, distance_projection_plane);
+		draw_wall(mlx, i, floor((mlx->data->screen_height / 2) - (wall_strip_height / 2)), wall_strip_height);
 		i++;
 	}
 }
 
 void	update_frame(t_mlx *mlx)
 {
-	// memset(mlx->img.frame->pixels, 0x000000FF, mlx->data->screen_width * mlx->data->screen_height * sizeof(uint32_t));
+	memset(mlx->img.frame->pixels, 0x00000000, mlx->data->screen_width * mlx->data->screen_height * sizeof(uint32_t));
+	draw_walls(mlx);
 	draw_map(mlx);
 	draw_rays(mlx);
 	draw_player(mlx);
-	draw_walls(mlx);
 	// draw_player_dir(mlx);
 }
 
@@ -455,19 +458,34 @@ int	main(void)
 	mlx_terminate(mlx.ptr);
 }
 
+//WSH wall_strip_height
 
-// if we itterate over all rays, each ray intersects with a wall for each horizontal pixel of the screen in a fov
-// so for each pixel of the screen, we will draw a number of pixels starting from the origin and growing towards the positive y axis of the screen
-// what is the distance to the projection plane ?
-// half of the screen width / tan(half of fov)
+// what is the issue with getting a WSH larger than screen_height ?
+	// have we used the wrong types (double instead of float) or even int instead of double somewhere ?
+	// is the problem that tan(fov / 2) has to be >= 1
+	// is the problem that (screen_width / 2) is too large
+	// is the problem that (tile_size / ray.distance) is too large
 
-// is it correct that working with screen_tile_size to calculate the distance, that distance / screen_tile_size will be the same value as if we worked
-// with mini_map_tile_size and then devide distance / mini_map_tile_size
+// why are we getting -81 as the y in draw_wall()
+	// what makes WaStHi too large
+	// the formula to calculate distance_to_proj_plane = (SW / 2) / tan(fov / 2)
+	// distance_to_proj_plane = 1662.768775; although half SW = 960
 
-// what do we mean by working with screen_tile_size to find the distance ?
-// if sts == 10 to find the distance we rely on sts and ray_angle and player x and y to work out the distance
-// if you scale by 10 and player is at (3, 3) then 30 30, you work with that scaler
 
-// what are we trying to do ?
+// what might be causing the segfault ?
+	// is it uninitialized variables ? likely not!
+	// is it out of bound incerements ? 
 
-// to render the walls on the screen, we do not just pass an arbitrary number of pixels to be drawn vertically as we itterate horizontally
+// can we fix the ray drawing white gap thing ?
+
+// what are the steps to be taken to render 3d walls ?
+
+// step1: itterate over the rays
+	// there is a ray for each horizontal pixel of the frame
+// step2: for each ray calculate the wall strip height
+	// calculate the distance to the projection plane
+		// distance to projection plane is: (screen_width / 2) / tan(fov / 2)
+	// the wall strip height is: tile_size / ray.distance * distance to projection plane
+// step3: draw strip on frame
+	// the strip is a row of pixels in an x coordinate, starting from: y = (screen_height / 2)
+	// - (WaStHi / 2), and ending at y += WaStHi

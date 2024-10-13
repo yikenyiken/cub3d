@@ -11,7 +11,7 @@ OBJS	:= ${SRCS:.c=.o}
 all: libmlx $(NAME)
 
 libmlx:
-	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
+	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4 
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
@@ -24,7 +24,7 @@ clean:
 	@rm -rf $(LIBMLX)/build
 
 fclean: clean
-	@rm -rf $(NAME) $(LIBMLX)
+	@rm -rf $(NAME)
 
 re: clean all
 
