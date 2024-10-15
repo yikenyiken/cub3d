@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/13 16:19:42 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/14 17:38:50 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 typedef struct s_ray
 {
+	double	angle;
 	double	x_intercept;
 	double	y_intercept;
 	double	x_step;
