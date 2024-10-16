@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/14 18:24:30 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/16 13:40:34 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -397,7 +397,7 @@ void	draw_wall(t_mlx *mlx, int x, double y, double wall_strip_height)
 		i = 0;
 	while (i < (int)(y + wall_strip_height) && i < mlx->data->screen_height)
 	{
-		mlx_put_pixel(mlx->img.frame, x, i, 0x000000FF);
+		mlx_put_pixel(mlx->img.frame, x, i, 0x99555194);
 		i++;
 	}
 }
@@ -422,10 +422,38 @@ void	draw_walls(t_mlx *mlx)
 	}
 }
 
+void	draw_ceiling_floor_color(t_mlx *mlx)
+{
+	uint32_t	*color_buffer;
+	uint32_t 	ceiling_color = 0x65FBF1FF; //cloudy sky color
+	uint32_t 	floor_color = 0x5511FFFF; //grass color
+	uint32_t	i;
+	uint32_t	j;
+
+	i = 0;
+	color_buffer = (uint32_t *)mlx->img.frame->pixels;
+	//draw ceiling pixels
+	while (i < mlx->img.frame->height / 2)
+	{
+		j = 0;
+		while (j < mlx->img.frame->width)
+			*(color_buffer + (i * mlx->img.frame->width) + j++) = ceiling_color;
+		i++;
+	}
+	//draw floor pixels
+	i = mlx->img.frame->height / 2;
+	while (i < mlx->img.frame->height)
+	{
+		j = 0;
+		while (j < mlx->img.frame->width)
+			*(color_buffer + (i * mlx->img.frame->width) + j++) = floor_color;
+		i++;
+	}
+}
+
 void	update_frame(t_mlx *mlx)
 {
-	memset(mlx->img.frame->pixels, 0x00000000, mlx->data->screen_width * mlx->data->screen_height * sizeof(uint32_t));
-	// memset here is used to clear up the frame before drawing to it again
+	draw_ceiling_floor_color(mlx);
 	draw_walls(mlx);
 	draw_map(mlx);
 	draw_rays(mlx);
