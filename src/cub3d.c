@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/16 13:40:34 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/18 12:21:55 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ double	max(double a, double b)
 	return (b);
 }
 
+void	graceful_exit(t_mlx *mlx)
+{
+	free(mlx->data->rays);
+	mlx_terminate(mlx->ptr); // this function includes all previously created images in the cleanup process
+	exit(1);
+}
+
 t_ray	*create_rays(t_data *data)
 {
 	t_ray	*rays;
@@ -40,23 +47,18 @@ t_ray	*create_rays(t_data *data)
 
 void	init_data(t_data *data, char **map)
 {
-	int	screen_max_width;
-	int	screen_max_height;
+	int	u_size;
 
+	u_size = 128;
 	data->map = map;
-	screen_max_width = 1024;
-	screen_max_height = 720;
-	data->screen_tile_size = 128;
 	data->rows = 10;
 	data->columns = 15;
 	data->fov = 60 * (M_PI / 180);
-	data->screen_width = data->screen_tile_size * data->columns;
-	data->screen_height = data->screen_tile_size * data->rows;
-	// if (data->screen_height > screen_max_height || data->screen_width > screen_max_width)
-	// 	(put_err("too large map\n"), exit(1));
-	data->mini_map_tile_size = 24;
-	data->mini_map_width = data->mini_map_tile_size * data->columns;
-	data->mini_map_height = data->mini_map_tile_size * data->rows;
+	data->screen_width = u_size * data->columns;
+	data->screen_height = u_size * data->rows;
+	data->tile_size = 24;
+	data->map_width = data->tile_size * data->columns;
+	data->map_height = data->tile_size * data->rows;
 	data->num_rays = data->screen_width;
 	data->rays = create_rays(data);
 }
@@ -69,7 +71,7 @@ void	set_player_xy(t_player *player, double x, double y)
 
 void	init_player(t_player *player, t_data *data)
 {
-	set_player_xy(player, data->mini_map_width / 2, data->mini_map_height / 2);
+	set_player_xy(player, data->map_width / 2, data->map_height / 2);
 
 	player->angle = M_PI;
 	player->color = 0xFF0000FF;
@@ -78,21 +80,43 @@ void	init_player(t_player *player, t_data *data)
 	player->rotation_step = 2 * (M_PI / 180);
 }
 
-void	render_frame_img(t_mlx *mlx, t_data *data)
+void	load_images(t_mlx *mlx, t_data *data)
 {
+	mlx_texture_t	*wall_txtr;
+
 	mlx->img.frame = mlx_new_image(mlx->ptr, data->screen_width, data->screen_height);
-	mlx_image_to_window(mlx->ptr, mlx->img.frame, 0, 0);
+
+	wall_txtr = mlx_load_png("/Users/yiken/Downloads/wall.png");
+	if (!mlx->img.frame || !wall_txtr)
+		graceful_exit(mlx);
+
+	mlx->img.wall = mlx_texture_to_image(mlx->ptr, wall_txtr);
+	mlx_delete_texture(wall_txtr);
+	if (!mlx->img.wall || !mlx_resize_image(mlx->img.wall, data->tile_size, data->tile_size))
+		graceful_exit(mlx);
+}
+
+void	render_frame_img(t_mlx *mlx)
+{
+	if (mlx_image_to_window(mlx->ptr, mlx->img.frame, 0, 0) == -1)
+		graceful_exit(mlx);
+}
+
+void	create_window(t_mlx *mlx, t_data *data)
+{
+	mlx->ptr = mlx_init(data->screen_width, data->screen_height, "cub3D", 0);
+	if (!mlx->ptr)
+		free(data->rays), exit(1);
 }
 
 void	init(t_mlx *mlx, t_data *data, char **map)
 {
+	mlx->data = data;
 	init_data(data, map);
 	init_player(&mlx->player, data);
-	mlx->ptr = mlx_init(data->screen_width, data->screen_height, "cub3D", 0);
-	if (!mlx->ptr)
-		exit(1);
-	render_frame_img(mlx, data);
-	mlx->data = data;
+	create_window(mlx, data);
+	load_images(mlx, data);
+	render_frame_img(mlx);
 }
 
 int	is_wall_hit(t_mlx *mlx, double x, double y)
@@ -100,8 +124,8 @@ int	is_wall_hit(t_mlx *mlx, double x, double y)
 	int	map_x;
 	int	map_y;
 
-	map_x = x / mlx->data->mini_map_tile_size;
-	map_y = y / mlx->data->mini_map_tile_size;
+	map_x = x / mlx->data->tile_size;
+	map_y = y / mlx->data->tile_size;
 	return (mlx->data->map[map_y][map_x] - '0');
 }
 
@@ -149,8 +173,8 @@ void	set_horz_intersect_xy(t_ray *ray, double ray_angle, t_mlx *mlx)
 	ray->horz_intersect_x = ray->x_intercept;
 	ray->horz_intersect_y = ray->y_intercept;
 
-	while ((ray->horz_intersect_x >= (double)0 && ray->horz_intersect_x <= mlx->data->mini_map_width)
-		&& (ray->horz_intersect_y >= (double)0 && ray->horz_intersect_y <= mlx->data->mini_map_height))
+	while ((ray->horz_intersect_x >= (double)0 && ray->horz_intersect_x <= mlx->data->map_width)
+		&& (ray->horz_intersect_y >= (double)0 && ray->horz_intersect_y <= mlx->data->map_height))
 	{
 		if (is_wall_hit(mlx, ray->horz_intersect_x, ray->horz_intersect_y - ray_facing_up))
 			break ;
@@ -167,17 +191,17 @@ void	find_horz_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
 	ray_facing_up = ray_angle > M_PI;
 	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
 
-	ray->y_intercept = floor(mlx->player.y / mlx->data->mini_map_tile_size) * mlx->data->mini_map_tile_size;
+	ray->y_intercept = floor(mlx->player.y / mlx->data->tile_size) * mlx->data->tile_size;
 	if (!ray_facing_up)
-		ray->y_intercept += mlx->data->mini_map_tile_size;
+		ray->y_intercept += mlx->data->tile_size;
 
 	ray->x_intercept = mlx->player.x + (ray->y_intercept - mlx->player.y) / tan(ray_angle);
 
-	ray->y_step = mlx->data->mini_map_tile_size;
+	ray->y_step = mlx->data->tile_size;
 	if (ray_facing_up)
 		ray->y_step = -ray->y_step;
 	
-	ray->x_step = mlx->data->mini_map_tile_size / tan(ray_angle);
+	ray->x_step = mlx->data->tile_size / tan(ray_angle);
 	if (ray_facing_right && ray->x_step < 0)
 		ray->x_step = -ray->x_step;
 	if (!ray_facing_right && ray->x_step > 0)
@@ -193,8 +217,8 @@ void	set_vert_intersect_xy(t_ray *ray, double ray_angle, t_mlx *mlx)
 	ray->vert_intersect_x = ray->x_intercept;
 	ray->vert_intersect_y = ray->y_intercept;
 
-	while ((ray->vert_intersect_x >= (double)0 && ray->vert_intersect_x <= mlx->data->mini_map_width)
-		&& (ray->vert_intersect_y >= (double)0 && ray->vert_intersect_y <= mlx->data->mini_map_height))
+	while ((ray->vert_intersect_x >= (double)0 && ray->vert_intersect_x <= mlx->data->map_width)
+		&& (ray->vert_intersect_y >= (double)0 && ray->vert_intersect_y <= mlx->data->map_height))
 	{
 		if (is_wall_hit(mlx, ray->vert_intersect_x - !ray_facing_right, ray->vert_intersect_y))
 			break ;
@@ -211,17 +235,17 @@ void	find_vert_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
 	ray_facing_up = ray_angle > M_PI;
 	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
 
-	ray->x_intercept = floor(mlx->player.x / mlx->data->mini_map_tile_size) * mlx->data->mini_map_tile_size;
+	ray->x_intercept = floor(mlx->player.x / mlx->data->tile_size) * mlx->data->tile_size;
 	if (ray_facing_right)
-		ray->x_intercept += mlx->data->mini_map_tile_size;
+		ray->x_intercept += mlx->data->tile_size;
 
 	ray->y_intercept = mlx->player.y + (ray->x_intercept - mlx->player.x) * tan(ray_angle);
 
-	ray->x_step = mlx->data->mini_map_tile_size;
+	ray->x_step = mlx->data->tile_size;
 	if (!ray_facing_right)
 		ray->x_step = -ray->x_step;
 
-	ray->y_step = mlx->data->mini_map_tile_size * tan(ray_angle);
+	ray->y_step = mlx->data->tile_size * tan(ray_angle);
 	if (!ray_facing_up && ray->y_step < 0)
 		ray->y_step = -ray->y_step;
 	if (ray_facing_up && ray->y_step > 0)
@@ -231,27 +255,41 @@ void	find_vert_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
 
 double	distance_between_points(double x1, double y1, double x2, double y2)
 {
-	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))); // this formula is used to calculate the hypothenuse length of a triangle using the length of the other two sides
 }
 
-void	cast_ray(t_ray *ray, t_mlx *mlx)
+void	set_ray_distance(t_ray *ray, t_mlx *mlx)
 {
 	double	horz_distance;
 	double	vert_distance;
 
-	find_horz_intersection(ray, ray->angle, mlx);
-	find_vert_intersection(ray, ray->angle, mlx);
 	horz_distance = distance_between_points(mlx->player.x, mlx->player.y, ray->horz_intersect_x, ray->horz_intersect_y);
 	vert_distance = distance_between_points(mlx->player.x, mlx->player.y, ray->vert_intersect_x, ray->vert_intersect_y);
 	ray->distance = horz_distance;
 	ray->wall_hit_x = ray->horz_intersect_x;
 	ray->wall_hit_y = ray->horz_intersect_y;
+	ray->is_vertical_hit = 0;
 	if (horz_distance > vert_distance)
 	{
 		ray->wall_hit_x = ray->vert_intersect_x;
 		ray->wall_hit_y = ray->vert_intersect_y;
 		ray->distance = vert_distance;
+		ray->is_vertical_hit = 1;
 	}
+}
+
+void	cast_ray(t_ray *ray, t_mlx *mlx)
+{
+	find_horz_intersection(ray, ray->angle, mlx);
+	find_vert_intersection(ray, ray->angle, mlx);
+	set_ray_distance(ray, mlx);
+	// the steps that are taken to find the horizontal/vertical intersection are as follows:
+		// calculate the x_intercept (check code)
+		// calculate the y_intercept (check code)
+		// calculate the x_step (check code)
+		// calculate the y_step (check code)
+		// increment x_intercept by x_step & y_intercept by y_step until a wall is hit
+		// ps: x_step & y_step can be negative depending on the direction the ray is facing
 }
 
 void	cast_rays(t_mlx *mlx)
@@ -280,10 +318,10 @@ void	draw_map_tile(int x, int y, t_mlx *mlx, uint32_t color)
 	int	j;
 
 	i = y;
-	while (i < y + mlx->data->mini_map_tile_size)
+	while (i < y + mlx->data->tile_size)
 	{
 		j = x;
-		while (j < x + mlx->data->mini_map_tile_size)
+		while (j < x + mlx->data->tile_size)
 		{
 			mlx_put_pixel(mlx->img.frame, j, i, color);
 			j++;
@@ -310,7 +348,7 @@ void	draw_map(t_mlx *mlx)
 				color = 0xFF555194;
 			else
 				color = 0xFFFFFFFF;
-			draw_map_tile(j * mlx->data->mini_map_tile_size, i * mlx->data->mini_map_tile_size, mlx, color);
+			draw_map_tile(j * mlx->data->tile_size, i * mlx->data->tile_size, mlx, color);
 			j++;
 		}
 		i++;
@@ -335,22 +373,6 @@ void	draw_player(t_mlx *mlx)
 		y++;
 	}
 }
-
-// void	draw_player_dir(t_mlx *mlx)
-// {
-// 	double	x;
-// 	double	y;
-// 	int	scaler;
-
-// 	scaler = 30;
-// 	while (scaler)
-// 	{
-// 		x = mlx->player.x + cos(mlx->player.angle) * scaler;
-// 		y = mlx->player.y + sin(mlx->player.angle) * scaler;
-// 		mlx_put_pixel(mlx->img.frame, x, y, 0x0000FFFF);
-// 		scaler--;
-// 	}
-// }
 
 void	draw_ray(t_mlx *mlx, t_ray *ray)
 {
@@ -390,15 +412,26 @@ void	draw_rays(t_mlx *mlx)
 
 void	draw_wall(t_mlx *mlx, int x, double y, double wall_strip_height)
 {
-	double	i;
+	int			i;
+	int			textureX;
+	int			textureY;
+	uint32_t	color;
+	uint32_t	*color_buffer;
 
+	color_buffer = (uint32_t *)mlx->img.wall->pixels;
+	textureX = (int)(mlx->data->rays + x)->wall_hit_x % (int)mlx->data->tile_size;
+	if ((mlx->data->rays + x)->is_vertical_hit)
+		textureX = (int)(mlx->data->rays + x)->wall_hit_y % (int)mlx->data->tile_size;
 	i = y;
 	if (i < 0)
 		i = 0;
-	while (i < (int)(y + wall_strip_height) && i < mlx->data->screen_height)
+	while (i < (int)(y + wall_strip_height) && i < (int)mlx->data->screen_height)
 	{
-		mlx_put_pixel(mlx->img.frame, x, i, 0x99555194);
-		i++;
+		textureY = (i - (int)y) * (mlx->data->tile_size / wall_strip_height);
+		if (textureY > mlx->data->tile_size)
+			break;
+		color = color_buffer[(textureY * (int)mlx->data->tile_size) + textureX];
+		mlx_put_pixel(mlx->img.frame, x, i++, color);
 	}
 }
 
@@ -416,13 +449,13 @@ void	draw_walls(t_mlx *mlx)
 	{
 		ray = mlx->data->rays + i;
 		perp_distance = ray->distance * cos(ray->angle - mlx->player.angle);
-		wall_strip_height = (mlx->data->mini_map_tile_size / perp_distance) * distance_projection_plane;
-		draw_wall(mlx, i, (int)(mlx->data->screen_height / 2) - (wall_strip_height / 2), wall_strip_height);
+		wall_strip_height = (mlx->data->tile_size / perp_distance) * distance_projection_plane;
+		draw_wall(mlx, i, (mlx->data->screen_height / 2) - (wall_strip_height / 2), wall_strip_height);
 		i++;
 	}
 }
 
-void	draw_ceiling_floor_color(t_mlx *mlx)
+void	draw_ceiling_floor(t_mlx *mlx)
 {
 	uint32_t	*color_buffer;
 	uint32_t 	ceiling_color = 0x65FBF1FF; //cloudy sky color
@@ -430,14 +463,14 @@ void	draw_ceiling_floor_color(t_mlx *mlx)
 	uint32_t	i;
 	uint32_t	j;
 
-	i = 0;
 	color_buffer = (uint32_t *)mlx->img.frame->pixels;
+	i = 0;
 	//draw ceiling pixels
 	while (i < mlx->img.frame->height / 2)
 	{
 		j = 0;
 		while (j < mlx->img.frame->width)
-			*(color_buffer + (i * mlx->img.frame->width) + j++) = ceiling_color;
+			*(color_buffer + (i * mlx->img.frame->width) + j++) = ceiling_color; // (i * mlx.img.frame->width) is used to travel to the next row
 		i++;
 	}
 	//draw floor pixels
@@ -453,12 +486,11 @@ void	draw_ceiling_floor_color(t_mlx *mlx)
 
 void	update_frame(t_mlx *mlx)
 {
-	draw_ceiling_floor_color(mlx);
+	draw_ceiling_floor(mlx);
 	draw_walls(mlx);
 	draw_map(mlx);
 	draw_rays(mlx);
 	draw_player(mlx);
-	// draw_player_dir(mlx);
 }
 
 void	game_loop(void *param)
@@ -491,5 +523,5 @@ int	main(void)
 	init(&mlx, &data, map);
 	mlx_loop_hook(mlx.ptr, game_loop, &mlx);
 	mlx_loop(mlx.ptr);
-	mlx_terminate(mlx.ptr);
+	graceful_exit(&mlx);
 }
