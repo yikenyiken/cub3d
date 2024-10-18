@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/14 17:38:50 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/17 18:21:59 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ typedef struct s_ray
 	double	wall_hit_x;
 	double	wall_hit_y;
 	double	distance;
+	int		is_vertical_hit;
 }	t_ray;
 
 typedef struct s_data
 {
-	double	mini_map_tile_size;
-	double	screen_tile_size;
+	double	tile_size;
 	int		rows;
 	int		columns;
-	double	mini_map_width;
-	double	mini_map_height;
+	double	map_width;
+	double	map_height;
 	double	screen_width;
 	double	screen_height;
 	double	fov;
@@ -53,6 +53,7 @@ typedef struct s_data
 typedef struct s_img
 {
 	mlx_image_t	*frame;
+	mlx_image_t	*wall;
 }	t_img;
 
 typedef struct s_player
