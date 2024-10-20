@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/18 12:21:55 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/20 18:00:33 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	init_player(t_player *player, t_data *data)
 	player->color = 0xFF0000FF;
 	player->radius = 4;
 	player->move_step = 1;
-	player->rotation_step = 2 * (M_PI / 180);
+	player->rotation_step = 1.55 * (M_PI / 180);
 }
 
 void	load_images(t_mlx *mlx, t_data *data)
@@ -129,32 +129,32 @@ int	is_wall_hit(t_mlx *mlx, double x, double y)
 	return (mlx->data->map[map_y][map_x] - '0');
 }
 
-void	update_player(t_mlx *mlx)
-{
-	int		move_direction;
-	double	new_x;
-	double	new_y;
+// void	update_player(t_mlx *mlx)
+// {
+// 	int		move_direction;
+// 	double	new_x;
+// 	double	new_y;
 
-	move_direction = 0;
+// 	move_direction = 0;
 
-	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W))
-		move_direction = 1;
+// 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W))
+// 		move_direction = 1;
 
-    if (mlx_is_key_down(mlx->ptr, MLX_KEY_S))
-		move_direction = -1;
+//     if (mlx_is_key_down(mlx->ptr, MLX_KEY_S))
+// 		move_direction = -1;
 
-    if (mlx_is_key_down(mlx->ptr, MLX_KEY_A))
-		mlx->player.angle += -mlx->player.rotation_step;
+//     if (mlx_is_key_down(mlx->ptr, MLX_KEY_A))
+// 		mlx->player.angle += -mlx->player.rotation_step;
 
-    if (mlx_is_key_down(mlx->ptr, MLX_KEY_D))
-		mlx->player.angle += mlx->player.rotation_step;
+//     if (mlx_is_key_down(mlx->ptr, MLX_KEY_D))
+// 		mlx->player.angle += mlx->player.rotation_step;
 	
-	new_x = mlx->player.x + cos(mlx->player.angle) * mlx->player.move_step * move_direction;
-	new_y = mlx->player.y + sin(mlx->player.angle) * mlx->player.move_step * move_direction;
+// 	new_x = mlx->player.x + cos(mlx->player.angle) * mlx->player.move_step * move_direction;
+// 	new_y = mlx->player.y + sin(mlx->player.angle) * mlx->player.move_step * move_direction;
 
-	if (!is_wall_hit(mlx, new_x, new_y))
-		set_player_xy(&mlx->player, new_x, new_y);
-}
+// 	if (!is_wall_hit(mlx, new_x, new_y))
+// 		set_player_xy(&mlx->player, new_x, new_y);
+// }
 
 double	normalize_angle(double angle)
 {
@@ -162,6 +162,140 @@ double	normalize_angle(double angle)
 	if (angle < 0)
 		angle = (2 * M_PI) + angle;
 	return (angle);
+}
+
+void	vertical_move(t_mlx *mlx)
+{
+	int		moving_direction;
+	double	new_x;
+	double	new_y;
+	double	direction_factor_x;
+	double	direction_factor_y;
+
+	moving_direction = 0;
+	new_x = mlx->player.x;
+	new_y = mlx->player.y;
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W) && (!mlx_is_key_down
+			(mlx->ptr, MLX_KEY_A) && !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
+		moving_direction = 1;
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S) && (!mlx_is_key_down
+			(mlx->ptr, MLX_KEY_A) && !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
+		moving_direction = -1;
+	direction_factor_x = cos(mlx->player.angle) * moving_direction;
+	direction_factor_y = sin(mlx->player.angle) * moving_direction;
+	new_x += direction_factor_x * mlx->player.move_step;
+	new_y += direction_factor_y * mlx->player.move_step;
+	if (!is_wall_hit(mlx, new_x + direction_factor_x * 6
+		, new_y + direction_factor_y * 6))
+	{
+		mlx->player.x = new_x;
+		mlx->player.y = new_y;
+	}
+}
+
+void	horizontal_move(t_mlx *mlx)
+{
+	double	new_x;
+	double	new_y;
+	double	new_angle;
+	int		is_moving;
+
+	new_x = mlx->player.x;
+	new_y = mlx->player.y;
+	new_angle = mlx->player.angle;
+	is_moving = 0;
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_D)
+		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
+			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)) && ++is_moving)
+		new_angle += M_PI / 2;
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_A)
+		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
+			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)) && ++is_moving)
+		new_angle -= M_PI / 2;
+	new_x += cos(new_angle) * mlx->player.move_step * is_moving;
+	new_y += sin(new_angle) * mlx->player.move_step * is_moving;
+	if (!is_wall_hit(mlx, new_x + cos(new_angle) * 6, new_y + sin(new_angle) * 6))
+	{
+		mlx->player.x = new_x;
+		mlx->player.y = new_y;
+	}
+}
+
+void	upwards_diagonal_move(t_mlx *mlx)
+{
+	double	new_x;
+	double	new_y;
+	double	new_angle;
+	int		is_moving;
+
+	new_x = mlx->player.x;
+	new_y = mlx->player.y;
+	new_angle = mlx->player.angle;
+	is_moving = 0;
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W) &&
+		mlx_is_key_down(mlx->ptr, MLX_KEY_D) && ++is_moving)
+		new_angle += (M_PI / 2) / 2;
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W) &&
+		mlx_is_key_down(mlx->ptr, MLX_KEY_A) && ++is_moving)
+		new_angle -= (M_PI / 2) / 2;
+	new_x += cos(new_angle) * mlx->player.move_step * is_moving;
+	new_y += sin(new_angle) * mlx->player.move_step * is_moving;
+	if (!is_wall_hit(mlx, new_x + cos(new_angle) * 6, new_y + sin(new_angle) * 6))
+	{
+		mlx->player.x = new_x;
+		mlx->player.y = new_y;
+	}
+}
+
+void	downwards_diagonal_move(t_mlx *mlx)
+{
+	double	new_x;
+	double	new_y;
+	double	new_angle;
+	int		is_moving;
+
+	new_x = mlx->player.x;
+	new_y = mlx->player.y;
+	new_angle = mlx->player.angle;
+	is_moving = 0;
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S) &&
+		mlx_is_key_down(mlx->ptr, MLX_KEY_D) && ++is_moving)
+		new_angle += M_PI - (M_PI / 2 / 2);
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S) &&
+		mlx_is_key_down(mlx->ptr, MLX_KEY_A) && ++is_moving)
+		new_angle += M_PI + (M_PI / 2 / 2);
+	new_x += cos(new_angle) * mlx->player.move_step *  is_moving;
+	new_y += sin(new_angle) * mlx->player.move_step * is_moving;
+	if (!is_wall_hit(mlx, new_x + cos(new_angle) * 6, new_y + sin(new_angle)))
+	{
+		mlx->player.x = new_x;
+		mlx->player.y = new_y;
+	}
+}
+
+void	rotate(t_mlx *mlx)
+{
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_RIGHT))
+		mlx->player.angle += mlx->player.rotation_step;
+	else if (mlx_is_key_down(mlx->ptr, MLX_KEY_LEFT))
+		mlx->player.angle -= mlx->player.rotation_step;
+}
+
+void	game_exit(t_mlx *mlx)
+{
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_ESCAPE))
+		graceful_exit(mlx);
+}
+
+void	update_player(t_mlx *mlx)
+{
+	vertical_move(mlx);
+	horizontal_move(mlx);
+
+	upwards_diagonal_move(mlx);
+	downwards_diagonal_move(mlx);
+	rotate(mlx);
+	game_exit(mlx);
 }
 
 void	set_horz_intersect_xy(t_ray *ray, double ray_angle, t_mlx *mlx)
@@ -525,3 +659,5 @@ int	main(void)
 	mlx_loop(mlx.ptr);
 	graceful_exit(&mlx);
 }
+
+// what is it to be done
