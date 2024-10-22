@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/20 18:00:33 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/22 12:27:33 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,23 +77,81 @@ void	init_player(t_player *player, t_data *data)
 	player->color = 0xFF0000FF;
 	player->radius = 4;
 	player->move_step = 1;
-	player->rotation_step = 1.55 * (M_PI / 180);
+	player->rotation_step = 1.30 * (M_PI / 180);
+}
+
+void	load_textures(t_mlx *mlx)
+{
+	t_txtr	*txtr;
+
+	txtr = &mlx->txtr;
+
+	txtr->wall_north = mlx_load_png("textures/wall_north.png");
+	if (!txtr->wall_north)
+		graceful_exit(mlx);
+	printf("failed\n");
+
+	txtr->wall_west = mlx_load_png("textures/wall_west.png");
+	if (!txtr->wall_west)
+		(mlx_delete_texture(txtr->wall_north), graceful_exit(mlx));
+	
+	txtr->wall_south = mlx_load_png("textures/wall_south.png");
+	if (!txtr->wall_south)
+		(mlx_delete_texture(txtr->wall_north), mlx_delete_texture(txtr->wall_west), graceful_exit(mlx));
+
+	txtr->wall_east = mlx_load_png("textures/wall_east.png");
+	if (!txtr->wall_east)
+		(mlx_delete_texture(txtr->wall_north), mlx_delete_texture(txtr->wall_west)
+			, mlx_delete_texture(txtr->wall_south), graceful_exit(mlx));
+}
+
+void	delete_txtrs(t_txtr *txtr)
+{
+	mlx_delete_texture(txtr->wall_north);
+	mlx_delete_texture(txtr->wall_west);
+	mlx_delete_texture(txtr->wall_south);
+	mlx_delete_texture(txtr->wall_east);
+}
+
+void	resize_imgs(t_mlx *mlx, t_img *img, double nwidth, double nheight)
+{
+	if (!mlx_resize_image(img->wall_north, nwidth, nheight)
+		|| !mlx_resize_image(img->wall_west, nwidth, nheight)
+			|| !mlx_resize_image(img->wall_south, nwidth, nheight)
+				|| !mlx_resize_image(img->wall_east, nwidth, nheight))
+		graceful_exit(mlx);
+}
+
+void	check_img_valid(t_mlx *mlx, t_img *img)
+{
+	if (!img->wall_north || !img->wall_west
+		|| !img->wall_south || !img->wall_east)
+		graceful_exit(mlx);
 }
 
 void	load_images(t_mlx *mlx, t_data *data)
 {
-	mlx_texture_t	*wall_txtr;
+	t_txtr	*txtr;
+	t_img	*img;
 
-	mlx->img.frame = mlx_new_image(mlx->ptr, data->screen_width, data->screen_height);
+	txtr = &mlx->txtr;
+	img = &mlx->img;
 
-	wall_txtr = mlx_load_png("/Users/yiken/Downloads/wall.png");
-	if (!mlx->img.frame || !wall_txtr)
+	img->frame = mlx_new_image(mlx->ptr, data->screen_width, data->screen_height);
+	if (!img->frame)
 		graceful_exit(mlx);
 
-	mlx->img.wall = mlx_texture_to_image(mlx->ptr, wall_txtr);
-	mlx_delete_texture(wall_txtr);
-	if (!mlx->img.wall || !mlx_resize_image(mlx->img.wall, data->tile_size, data->tile_size))
-		graceful_exit(mlx);
+	img->wall_north = mlx_texture_to_image(mlx->ptr, txtr->wall_north);
+
+	img->wall_west = mlx_texture_to_image(mlx->ptr, txtr->wall_west);
+
+	img->wall_south = mlx_texture_to_image(mlx->ptr, txtr->wall_south);
+
+	img->wall_east = mlx_texture_to_image(mlx->ptr, txtr->wall_east);
+
+	delete_txtrs(txtr);
+	check_img_valid(mlx, img);
+	resize_imgs(mlx, img, data->tile_size, data->tile_size);
 }
 
 void	render_frame_img(t_mlx *mlx)
@@ -115,6 +173,7 @@ void	init(t_mlx *mlx, t_data *data, char **map)
 	init_data(data, map);
 	init_player(&mlx->player, data);
 	create_window(mlx, data);
+	load_textures(mlx);
 	load_images(mlx, data);
 	render_frame_img(mlx);
 }
@@ -129,33 +188,6 @@ int	is_wall_hit(t_mlx *mlx, double x, double y)
 	return (mlx->data->map[map_y][map_x] - '0');
 }
 
-// void	update_player(t_mlx *mlx)
-// {
-// 	int		move_direction;
-// 	double	new_x;
-// 	double	new_y;
-
-// 	move_direction = 0;
-
-// 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W))
-// 		move_direction = 1;
-
-//     if (mlx_is_key_down(mlx->ptr, MLX_KEY_S))
-// 		move_direction = -1;
-
-//     if (mlx_is_key_down(mlx->ptr, MLX_KEY_A))
-// 		mlx->player.angle += -mlx->player.rotation_step;
-
-//     if (mlx_is_key_down(mlx->ptr, MLX_KEY_D))
-// 		mlx->player.angle += mlx->player.rotation_step;
-	
-// 	new_x = mlx->player.x + cos(mlx->player.angle) * mlx->player.move_step * move_direction;
-// 	new_y = mlx->player.y + sin(mlx->player.angle) * mlx->player.move_step * move_direction;
-
-// 	if (!is_wall_hit(mlx, new_x, new_y))
-// 		set_player_xy(&mlx->player, new_x, new_y);
-// }
-
 double	normalize_angle(double angle)
 {
 	angle = fmod(angle, (2 * M_PI));
@@ -164,112 +196,78 @@ double	normalize_angle(double angle)
 	return (angle);
 }
 
-void	vertical_move(t_mlx *mlx)
+void	init_info(t_move_info *info, t_mlx *mlx)
 {
-	int		moving_direction;
-	double	new_x;
-	double	new_y;
-	double	direction_factor_x;
-	double	direction_factor_y;
+	info->new_x = mlx->player.x;
+	info->new_y = mlx->player.y;
+	info->new_angle = mlx->player.angle;
+	info->is_moving = 0;
+}
 
-	moving_direction = 0;
-	new_x = mlx->player.x;
-	new_y = mlx->player.y;
-	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W) && (!mlx_is_key_down
-			(mlx->ptr, MLX_KEY_A) && !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
-		moving_direction = 1;
-	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S) && (!mlx_is_key_down
-			(mlx->ptr, MLX_KEY_A) && !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
-		moving_direction = -1;
-	direction_factor_x = cos(mlx->player.angle) * moving_direction;
-	direction_factor_y = sin(mlx->player.angle) * moving_direction;
-	new_x += direction_factor_x * mlx->player.move_step;
-	new_y += direction_factor_y * mlx->player.move_step;
-	if (!is_wall_hit(mlx, new_x + direction_factor_x * 6
-		, new_y + direction_factor_y * 6))
+void	vertical_info(t_mlx *mlx, t_move_info *info)
+{
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W)
+		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_A)
+			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
+		info->is_moving = 1;
+
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S)
+		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_A)
+			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
 	{
-		mlx->player.x = new_x;
-		mlx->player.y = new_y;
+		info->new_angle += M_PI;
+		info->is_moving = 1;
 	}
 }
 
-void	horizontal_move(t_mlx *mlx)
+void	horizontal_info(t_mlx *mlx, t_move_info *info)
 {
-	double	new_x;
-	double	new_y;
-	double	new_angle;
-	int		is_moving;
-
-	new_x = mlx->player.x;
-	new_y = mlx->player.y;
-	new_angle = mlx->player.angle;
-	is_moving = 0;
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_D)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
-			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)) && ++is_moving)
-		new_angle += M_PI / 2;
+			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)))
+	{
+		info->new_angle += M_PI / 2;
+		info->is_moving = 1;
+	}
+
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_A)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
-			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)) && ++is_moving)
-		new_angle -= M_PI / 2;
-	new_x += cos(new_angle) * mlx->player.move_step * is_moving;
-	new_y += sin(new_angle) * mlx->player.move_step * is_moving;
-	if (!is_wall_hit(mlx, new_x + cos(new_angle) * 6, new_y + sin(new_angle) * 6))
+			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)))
 	{
-		mlx->player.x = new_x;
-		mlx->player.y = new_y;
+		info->new_angle -= M_PI / 2;
+		info->is_moving = 1;
 	}
 }
 
-void	upwards_diagonal_move(t_mlx *mlx)
+void	upwards_diagonal_info(t_mlx *mlx, t_move_info *info)
 {
-	double	new_x;
-	double	new_y;
-	double	new_angle;
-	int		is_moving;
-
-	new_x = mlx->player.x;
-	new_y = mlx->player.y;
-	new_angle = mlx->player.angle;
-	is_moving = 0;
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W) &&
-		mlx_is_key_down(mlx->ptr, MLX_KEY_D) && ++is_moving)
-		new_angle += (M_PI / 2) / 2;
-	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W) &&
-		mlx_is_key_down(mlx->ptr, MLX_KEY_A) && ++is_moving)
-		new_angle -= (M_PI / 2) / 2;
-	new_x += cos(new_angle) * mlx->player.move_step * is_moving;
-	new_y += sin(new_angle) * mlx->player.move_step * is_moving;
-	if (!is_wall_hit(mlx, new_x + cos(new_angle) * 6, new_y + sin(new_angle) * 6))
+		mlx_is_key_down(mlx->ptr, MLX_KEY_D))
 	{
-		mlx->player.x = new_x;
-		mlx->player.y = new_y;
+		info->new_angle += (M_PI / 2) / 2;
+		info->is_moving = 1;
+	}
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W) &&
+		mlx_is_key_down(mlx->ptr, MLX_KEY_A))
+	{
+		info->new_angle -= (M_PI / 2) / 2;
+		info->is_moving = 1;
 	}
 }
 
-void	downwards_diagonal_move(t_mlx *mlx)
+void	downwards_diagonal_info(t_mlx *mlx, t_move_info *info)
 {
-	double	new_x;
-	double	new_y;
-	double	new_angle;
-	int		is_moving;
-
-	new_x = mlx->player.x;
-	new_y = mlx->player.y;
-	new_angle = mlx->player.angle;
-	is_moving = 0;
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S) &&
-		mlx_is_key_down(mlx->ptr, MLX_KEY_D) && ++is_moving)
-		new_angle += M_PI - (M_PI / 2 / 2);
-	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S) &&
-		mlx_is_key_down(mlx->ptr, MLX_KEY_A) && ++is_moving)
-		new_angle += M_PI + (M_PI / 2 / 2);
-	new_x += cos(new_angle) * mlx->player.move_step *  is_moving;
-	new_y += sin(new_angle) * mlx->player.move_step * is_moving;
-	if (!is_wall_hit(mlx, new_x + cos(new_angle) * 6, new_y + sin(new_angle)))
+		mlx_is_key_down(mlx->ptr, MLX_KEY_D))
 	{
-		mlx->player.x = new_x;
-		mlx->player.y = new_y;
+		info->new_angle += M_PI - (M_PI / 2 / 2);
+		info->is_moving = 1;
+	}
+	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S) &&
+		mlx_is_key_down(mlx->ptr, MLX_KEY_A))
+	{
+		info->new_angle += M_PI + (M_PI / 2 / 2);
+		info->is_moving = 1;
 	}
 }
 
@@ -281,6 +279,30 @@ void	rotate(t_mlx *mlx)
 		mlx->player.angle -= mlx->player.rotation_step;
 }
 
+void	move_by_info(t_mlx *mlx, t_move_info *info)
+{
+	double	x_ahead;
+	double	y_ahead;
+	double	pixels_ahead;
+
+	pixels_ahead = 6;
+	
+	if (!info->is_moving)
+		return ;
+	
+	info->new_x += cos(info->new_angle) * mlx->player.move_step;
+	info->new_y += sin(info->new_angle) * mlx->player.move_step;
+	
+	x_ahead = info->new_x + cos(info->new_angle) * pixels_ahead;
+	y_ahead = info->new_y + sin(info->new_angle) * pixels_ahead;
+	
+	if (!is_wall_hit(mlx, x_ahead, y_ahead))
+	{
+		mlx->player.x = info->new_x;
+		mlx->player.y = info->new_y;
+	}
+}
+
 void	game_exit(t_mlx *mlx)
 {
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_ESCAPE))
@@ -289,12 +311,20 @@ void	game_exit(t_mlx *mlx)
 
 void	update_player(t_mlx *mlx)
 {
-	vertical_move(mlx);
-	horizontal_move(mlx);
+	t_move_info	info;
 
-	upwards_diagonal_move(mlx);
-	downwards_diagonal_move(mlx);
 	rotate(mlx);
+
+	init_info(&info, mlx);
+
+	vertical_info(mlx, &info);
+	horizontal_info(mlx, &info);
+
+	upwards_diagonal_info(mlx, &info);
+	downwards_diagonal_info(mlx, &info);
+
+	move_by_info(mlx, &info);
+
 	game_exit(mlx);
 }
 
@@ -544,6 +574,18 @@ void	draw_rays(t_mlx *mlx)
 	}
 }
 
+uint8_t	*get_img_pxbuf(t_ray *ray, t_player *player, t_img *img)
+{
+	if (ray->is_vertical_hit && ray->wall_hit_x > player->x) // east
+		return (img->wall_east->pixels);
+	if (ray->is_vertical_hit && ray->wall_hit_x < player->x) // west
+		return (img->wall_west->pixels);
+	if (!ray->is_vertical_hit && ray->wall_hit_y > player->y) // south
+		return (img->wall_south->pixels);
+
+	return (img->wall_north->pixels); // north
+}
+
 void	draw_wall(t_mlx *mlx, int x, double y, double wall_strip_height)
 {
 	int			i;
@@ -552,7 +594,7 @@ void	draw_wall(t_mlx *mlx, int x, double y, double wall_strip_height)
 	uint32_t	color;
 	uint32_t	*color_buffer;
 
-	color_buffer = (uint32_t *)mlx->img.wall->pixels;
+	color_buffer = (uint32_t *)get_img_pxbuf(mlx->data->rays + x, &mlx->player, &mlx->img);
 	textureX = (int)(mlx->data->rays + x)->wall_hit_x % (int)mlx->data->tile_size;
 	if ((mlx->data->rays + x)->is_vertical_hit)
 		textureX = (int)(mlx->data->rays + x)->wall_hit_y % (int)mlx->data->tile_size;
@@ -661,3 +703,17 @@ int	main(void)
 }
 
 // what is it to be done
+	// what is it that makes wall_north not appear
+		// is it that the buffer still holds the old pixels
+		// is it that the size of it is pretty big
+	// render different textures based on the cardinal directions
+		// vertically intersecting ray means it is drawing what's on the sides // seems so
+		// horizontally intersecting ray means it is drawing what's in front or back
+		// in case of vertical intersection
+			// if wall_hit_x is smaller than (mini_map_width / 2) it means we are dealing with west
+			// if wall_hit_x is greater than (mini_map_width / 2) it means we are dealing with east
+		// in case of horizontal intersection
+			// if wall_hit_y is smallter than (mini_map_height / 2) it means we are dealing with north
+			// if wall_hit_y is greater than (mini_map_height / 2) it means we are dealing with south
+
+// function name: pick img

@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/20 17:47:24 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/21 17:32:38 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,14 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <math.h>
+
+typedef struct s_move_info
+{
+	double	new_x;
+	double	new_y;
+	double	new_angle;
+	int		is_moving;
+}	t_move_info;
 
 typedef struct s_ray
 {
@@ -50,10 +58,21 @@ typedef struct s_data
 	t_ray	*rays;
 }	t_data;
 
+typedef struct s_txtr
+{
+	mlx_texture_t	*wall_north;
+	mlx_texture_t	*wall_west;
+	mlx_texture_t	*wall_south;
+	mlx_texture_t	*wall_east;
+}	t_txtr;
+
 typedef struct s_img
 {
 	mlx_image_t	*frame;
-	mlx_image_t	*wall;
+	mlx_image_t	*wall_north;
+	mlx_image_t	*wall_west;
+	mlx_image_t	*wall_south;
+	mlx_image_t	*wall_east;
 }	t_img;
 
 typedef struct s_player
@@ -71,6 +90,7 @@ typedef struct s_mlx
 {
 	t_data		*data;
 	mlx_t		*ptr;
+	t_txtr		txtr;
 	t_img		img;
 	t_player	player;
 }	t_mlx;
