@@ -1,10 +1,11 @@
 NAME	:= game
 CFLAGS	:= -Wextra -Wall -Werror -Wunreachable-code -Ofast
 LIBMLX	:= ./mlx
+USER	:= $(shell echo ~)
 
 SCRIPT	:= ./install.sh
 HEADERS	:= -I ./include -I $(LIBMLX)/include
-LIBS	:= $(LIBMLX)/build/libmlx42.a -L/Users/yiken/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
+LIBS	:= $(LIBMLX)/build/libmlx42.a -L$(USER)/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
 SRCS	:= $(shell find ./src -iname "*.c")
 OBJS	:= ${SRCS:.c=.o}
 
