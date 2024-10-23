@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/21 17:32:38 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/23 12:41:30 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,17 @@ typedef struct s_ray
 
 typedef struct s_data
 {
-	double	tile_size;
-	int		rows;
-	int		columns;
-	double	map_width;
-	double	map_height;
-	double	screen_width;
-	double	screen_height;
-	double	fov;
-	int		num_rays;
-	char	**map;
-	t_ray	*rays;
+	double		tile_size;
+	int			rows;
+	int			columns;
+	double		map_width;
+	double		map_height;
+	double		screen_width;
+	double		screen_height;
+	double		fov;
+	int			num_rays;
+	char		**map;
+	t_ray		*rays;
 }	t_data;
 
 typedef struct s_txtr
@@ -88,10 +88,10 @@ typedef struct s_player
 
 typedef struct s_mlx
 {
-	t_data		*data;
+	t_data		data;
 	mlx_t		*ptr;
-	t_txtr		txtr;
-	t_img		img;
+	t_txtr		txtrs;
+	t_img		imgs;
 	t_player	player;
 }	t_mlx;
 
