@@ -1,36 +1,37 @@
-NAME	:= game
-CFLAGS	:= -Wextra -Wall -Werror -Wunreachable-code -Ofast
-LIBMLX	:= ./mlx
-USER	:= $(shell echo ~)
-
+NAME	= cub3D
+SRC		= $(shell find ./src -iname "*.c")
+OBJ		= $(SRC:.c=.o)
 SCRIPT	:= ./install.sh
-HEADERS	:= -I ./include -I $(LIBMLX)/include
-LIBS	:= $(LIBMLX)/build/libmlx42.a -L$(USER)/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
-SRCS	:= $(shell find ./src -iname "*.c")
-OBJS	:= ${SRCS:.c=.o}
+LIBMLX	:= ./mlx
+FLAGS	= -Wall -Wextra -Werror #-g -fsanitize=address #-Wunreachable-code -Ofast
 
-all: libmlx $(NAME)
+HEADERS	:= -I$(LIBMLX)/include
+LIBS	= $(LIBMLX)/build/libmlx42.a -L/Users/$(USER)/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit #-fsanitize=address
+CC		= cc
+RM		= rm -rf
+
+
+all		: libmlx $(NAME)
 
 libmlx:
-	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4 
+	cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
-%.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+%.o		: %.c inc/cub3D.h
+	$(CC) $(FLAGS) -o $@ -c $< $(HEADERS)
 
-$(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+$(NAME): $(OBJ)
+	$(CC) $(OBJ) $(LIBS) -o $(NAME)
 
-clean:
-	@rm -rf $(OBJS)
-	@rm -rf $(LIBMLX)/build
+clean	:
+	$(RM) $(OBJ) # $(LIBMLX)/build
 
-fclean: clean
-	@rm -rf $(NAME) $(LIBMLX)
+fclean	: clean
+	$(RM) $(NAME) $(LIBMLX)
 
-re: clean all
+re		: fclean all
 
-t: all
-	@./game
+t		: all clean
+	clear && ./cub3D maps/map1.cub
 
 install:
 	sh $(SCRIPT)

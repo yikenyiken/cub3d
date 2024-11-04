@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/23 13:04:29 by yiken            ###   ########.fr       */
+/*   Updated: 2024/10/29 13:01:29 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../mlx/include/MLX42/MLX42.h"
-#include <stdio.h>
-#include <string.h>
-#include "cub3d.h"
+#include "../inc/cub3D.h"
 
 void	put_err(char *str)
 {
@@ -31,8 +28,15 @@ double	max(double a, double b)
 void	graceful_exit(t_mlx *mlx)
 {
 	free(mlx->data.rays);
+	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_east);
+	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_north);
+	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_south);
+	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_west);
+	// int i = 0;
+	// while (mlx->imgs.sprint_imgs[i])
+	// 	mlx_delete_image(mlx->ptr, mlx->imgs.sprint_imgs[i]);
+	free(mlx->imgs.sprint_imgs);
 	mlx_terminate(mlx->ptr); // this function includes all previously created images in the cleanup process
-	exit(1);
 }
 
 t_ray	*create_rays(t_data *data)
@@ -45,11 +49,13 @@ t_ray	*create_rays(t_data *data)
 	return (rays);
 }
 
-void	init_data(t_data *data, char **map)
+void	init_data(t_data *data, t_map *map)
 {
-	const int	screen_tile_size = 128;
-
-	data->map = map;
+	const int		screen_tile_size = 128;
+	
+	data->map = map->map3D;
+	data->F = map->Fhex;
+	data->C = map->Chex;
 	data->rows = 10;
 	data->columns = 15;
 	data->fov = 60 * (M_PI / 180);
@@ -75,8 +81,8 @@ void	init_player(t_player *player, t_data *data)
 	player->angle = M_PI;
 	player->color = 0xFF0000FF;
 	player->radius = 4;
-	player->move_step = 1;
-	player->rotation_step = 1.55 * (M_PI / 180);
+	player->move_step = 2;
+	player->rotation_step = 3 * (M_PI / 180);
 }
 
 void	create_window(t_mlx *mlx)
@@ -86,25 +92,25 @@ void	create_window(t_mlx *mlx)
 		free(mlx->data.rays), exit(1);
 }
 
-void	load_textures(t_mlx *mlx)
+void	load_textures(t_mlx *mlx, t_map *map)
 {
 	t_txtr	*txtrs;
 
 	txtrs = &mlx->txtrs;
 
-	txtrs->wall_north = mlx_load_png("textures/wall_north.png");
+	txtrs->wall_north = mlx_load_png(map->NOpath);
 	if (!txtrs->wall_north)
 		graceful_exit(mlx);
 
-	txtrs->wall_west = mlx_load_png("textures/wall_west.png");
+	txtrs->wall_west = mlx_load_png(map->WEpath);
 	if (!txtrs->wall_west)
 		(mlx_delete_texture(txtrs->wall_north), graceful_exit(mlx));
 
-	txtrs->wall_south = mlx_load_png("textures/wall_south.png");
+	txtrs->wall_south = mlx_load_png(map->SOpath);
 	if (!txtrs->wall_south)
 		(mlx_delete_texture(txtrs->wall_north), mlx_delete_texture(txtrs->wall_west), graceful_exit(mlx));
 
-	txtrs->wall_east = mlx_load_png("textures/wall_east.png");
+	txtrs->wall_east = mlx_load_png(map->EApath);
 	if (!txtrs->wall_east)
 		(mlx_delete_texture(txtrs->wall_north), mlx_delete_texture(txtrs->wall_west)
 			, mlx_delete_texture(txtrs->wall_south), graceful_exit(mlx));
@@ -154,6 +160,8 @@ void	load_images(t_mlx *mlx)
 
 	imgs->wall_east = mlx_texture_to_image(mlx->ptr, txtrs->wall_east);
 
+	imgs->sprint_imgs = ft_load_image(mlx, 14);
+
 	delete_txtrs(txtrs);
 	handle_txtr_to_img_fail(mlx, imgs);
 	resize_imgs(mlx, imgs, tile_size, tile_size);
@@ -165,19 +173,20 @@ void	render_frame_to_window(t_mlx *mlx)
 		graceful_exit(mlx);
 }
 
-void	init_mlx(t_mlx *mlx)
+void	init_mlx(t_mlx *mlx, t_map *map)
 {
+	mlx->stop = 0;
 	create_window(mlx);
-	load_textures(mlx);
+	load_textures(mlx, map);
 	load_images(mlx);
 	render_frame_to_window(mlx);
 }
 
-void	init_cub3d(t_mlx *mlx, char **map)
+void	init_cub3d(t_mlx *mlx, t_map *map)
 {
 	init_data(&mlx->data, map);
 	init_player(&mlx->player, &mlx->data);
-	init_mlx(mlx);
+	init_mlx(mlx, map);
 }
 
 int	is_wall_hit(t_mlx *mlx, double x, double y)
@@ -211,15 +220,27 @@ void	vertical_move_listen(t_mlx *mlx, t_move_info *move_info)
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_A)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
-		move_info->is_moving = 1;
+		(move_info->is_moving = 1, animation(mlx, mlx->imgs.sprint_imgs, 14));
 
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_A)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
 	{
+		animation(mlx, mlx->imgs.sprint_imgs, 14);
 		move_info->new_angle += M_PI;
 		move_info->is_moving = 1;
 	}
+	
+	if (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
+		&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)
+			&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_A)
+				&& !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
+	{
+		mlx->stop = 0;
+		for (int i = 1; i < 14; i++)
+			mlx->imgs.sprint_imgs[i]->enabled = 0;
+	}
+		
 }
 
 void	hoizontal_move_listen(t_mlx *mlx, t_move_info *move_info)
@@ -638,8 +659,8 @@ void	draw_walls(t_mlx *mlx)
 void	draw_ceiling_and_floor(t_mlx *mlx)
 {
 	uint32_t	*color_buffer;
-	uint32_t 	ceiling_color = 0x65FBF1FF; //cloudy sky color
-	uint32_t 	floor_color = 0x5511FFFF; //grass color
+	uint32_t 	ceiling_color = mlx->data.C;
+	uint32_t 	floor_color = mlx->data.F;
 	uint32_t	i;
 	uint32_t	j;
 
@@ -671,6 +692,7 @@ void	draw_frame(t_mlx *mlx)
 	draw_map(mlx);
 	draw_rays(mlx);
 	draw_player(mlx);
+	render_imgs(mlx, mlx->imgs.sprint_imgs, 14);
 }
 
 void	game_loop(void *param)
@@ -683,26 +705,34 @@ void	game_loop(void *param)
 	draw_frame(mlx);
 }
 
-int	main(void)
+void	init_flg(t_flg *flg)
+{
+	flg->N_flg = 0;
+	flg->S_flg = 0;
+	flg->W_flg = 0;
+	flg->E_flg = 0;
+	flg->F_flg = 0;
+	flg->C_flg = 0;
+}
+void f(void)
+{
+	system("leaks cub3D");
+}
+
+int	main(int ac, char **av)
 {
 	t_mlx	mlx;
-	char	*map[10] = {
-		"111111111111111",
-		"100000000000001",
-		"100000001110001",
-		"100000001000001",
-		"100000000000001",
-		"101000000000001",
-		"101001111110001",
-		"101000000000001",
-		"100000000000001",
-		"111111111111111",
-	};
+	t_map	map;
 
-	init_cub3d(&mlx, map);
+	if (ac != 2)
+		return (write(2, "Wrong arguments\n", 16), 1);
+	process_file_content(av[1], &map);
+	init_cub3d(&mlx, &map);
 	mlx_loop_hook(mlx.ptr, game_loop, &mlx);
 	mlx_loop(mlx.ptr);
+	free_game(&map);
 	graceful_exit(&mlx);
+	atexit(f);
 }
 
 // what is it to be done
