@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/10/28 16:23:15 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/03 12:33:34 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,57 +67,45 @@ static	char	*ft_read_file(char *map_path)
 	fd = open(map_path, O_RDONLY);
 	read(fd, map, count);
 	map[count] = '\0';
-	close(fd);
-	return (map);
+	return (close(fd), map);
 }
 
 void	check_elements(char *map)
 {
-	// declare a arr of elem and also flags of elem
 	int		p_flg;
 	int		i;
 
 	p_flg = 0;
 	i = 0;
-	// iterete in the map for check elemn
 	while (map[i])
 	{
-		// if error exit
 		if (map[i] != '0' && map[i] != '1' && map[i] != ' ' && map[i] != '\n')
 		{
-			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E' && map[i] != 'W') || p_flg)
-				ft_error("the char is not valid\n");
+			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E'
+					&& map[i] != 'W') || p_flg)
+				ft_error("check the element of map\n");
 			else
 				p_flg = 1;
 		}
 		i++;
 	}
 	if (map[i] == '\0' && !p_flg)
-		ft_error("the char is dup\n");
-}
-
-void	parssing_map(t_map *my_map, char *map)
-{
-	// check the content of the map
-	check_elements(map);
-	// check the map is surrounded by walls (1)
-	check_walls(my_map, my_map->map3D);
+		ft_error("check the element of map\n");
 }
 
 void	process_file_content(char *map_path, t_map *my_map)
 {
 	char	*var_map;
 	char	*map;
+	t_flg	flg;
 
-	// check file is valid
 	check_file_is_valid(map_path);
-	// read file in char *var_map
 	var_map = ft_read_file(map_path);
-	// check texture and the colors data
-	map = check_file_elementes(my_map, var_map);
-	convert_RGB_to_hex(my_map, my_map->F, 'F');
-	convert_RGB_to_hex(my_map, my_map->C, 'C');
+	map = check_file_elementes(my_map, var_map, &flg);
+	convert_rgb_to_hex(my_map, my_map->F, 'F');
+	convert_rgb_to_hex(my_map, my_map->C, 'C');
 	my_map->map3D = ft_split(my_map, map, '\n');
-	parssing_map(my_map, map);
+	check_elements(map);
+	check_walls(my_map, my_map->map3D);
 	free(var_map);
 }
