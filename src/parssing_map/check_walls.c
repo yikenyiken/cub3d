@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 09:15:48 by messkely          #+#    #+#             */
-/*   Updated: 2024/10/23 18:16:50 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/01 16:15:22 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,38 +40,40 @@ void	check_left_right_side(char **map3D, int rows)
 	}
 }
 
-void	check_0_is_dilemited(char **map3D, int rows)
+void	check_dirs_of_0(t_map *map, int i, int j, int cols)
+{
+	if (j == 0 || j == cols - 1 || i == 0 || i == map->rows_size - 1)
+		ft_error("0 at the edge is not delimited\n");
+	if (j < cols - 1 && !is_valid_char(map->map3D[i][j + 1]))
+		ft_error("check 0 is dilemited\n");
+	if (j > 0 && !is_valid_char(map->map3D[i][j - 1]))
+		ft_error("check 0 is dilemited\n");
+	if (i < map->rows_size - 1 && !is_valid_char(map->map3D[i + 1][j]))
+		ft_error("check 0 is dilemited\n");
+	if (i > 0 && !is_valid_char(map->map3D[i - 1][j]))
+		ft_error("check 0 is dilemited\n");
+}
+
+void	check_0_is_dilemited(t_map *map)
 {
 	int	i;
 	int	j;
 	int	cols;
 
 	i = 0;
-	while (i < rows)
+	while (i < map->rows_size)
 	{
 		j = 0;
-		cols = ft_strlen(map3D[i]);
-		while (map3D[i][j])
+		cols = ft_strlen(map->map3D[i]);
+		while (map->map3D[i][j])
 		{
-			if (map3D[i][j] == '0')
-			{
-				if (j == 0 || j == cols - 1 || i == 0 || i == rows - 1)
-					ft_error("0 at the edge is not delimited\n");
-				if (j < cols - 1 && !is_valid_char(map3D[i][j + 1]))
-					ft_error("check 0 is dilemited\n");
-				if (j > 0 && !is_valid_char(map3D[i][j - 1]))
-					ft_error("check 0 is dilemited\n");
-				if (i < rows - 1 && !is_valid_char(map3D[i + 1][j]))
-					ft_error("check 0 is dilemited\n");
-				if (i > 0 && !is_valid_char(map3D[i - 1][j]))
-					ft_error("check 0 is dilemited\n");
-			}
+			if (map->map3D[i][j] == '0')
+				check_dirs_of_0(map, i, j, cols);
 			j++;
 		}
 		i++;
 	}
 }
-
 
 void	check_walls(t_map *map, char **map3D)
 {
@@ -80,7 +82,6 @@ void	check_walls(t_map *map, char **map3D)
 	int	i;
 
 	rows = map->rows_size;
-	// check the first row
 	cols = ft_strlen(map3D[0]);
 	i = 0;
 	while (i < cols)
@@ -89,7 +90,6 @@ void	check_walls(t_map *map, char **map3D)
 			ft_error("check the first row\n");
 		i++;
 	}
-	// check the last row
 	cols = ft_strlen(map3D[rows - 1]);
 	i = 0;
 	while (i < cols)
@@ -98,8 +98,6 @@ void	check_walls(t_map *map, char **map3D)
 			ft_error("check the last row\n");
 		i++;
 	}
-	// check the left and the right side
 	check_left_right_side(map3D, rows);
-	// check 0 is dilemited by 1 ou 0 ou the vectors
-	check_0_is_dilemited(map3D, rows);
+	check_0_is_dilemited(map);
 }

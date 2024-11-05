@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/10/29 13:01:29 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/04 18:09:46 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -713,6 +713,7 @@ void	init_flg(t_flg *flg)
 	flg->E_flg = 0;
 	flg->F_flg = 0;
 	flg->C_flg = 0;
+	flg->break_flg = 0;
 }
 void f(void)
 {

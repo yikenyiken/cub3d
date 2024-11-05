@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:57:42 by messkely          #+#    #+#             */
-/*   Updated: 2024/10/29 12:03:26 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/04 17:52:50 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_flg
 	int	E_flg;
 	int	F_flg;
 	int	C_flg;
+	int	break_flg;
 }	t_flg;
 
 typedef struct s_map
@@ -45,6 +46,7 @@ typedef struct s_map
 	int			C[3];
 	uint32_t	Fhex;
 	uint32_t	Chex;
+	t_flg		*flg;
 }	t_map;
 
 // Rendring
@@ -143,13 +145,14 @@ char	*ft_trim(char *s);
 int		ft_isdigit(char c);
 int		is_num(char *s);
 long	ft_atoi(const char *str);
-char	*ft_itoa(int n);
-char	*ft_strjoin(char *dir, char *src, char *extension);
+char	*get_line(char *s, char c);
 
-char	*check_file_elementes(t_map *my_map, char *file);
+char	*check_file_elementes(t_map *my_map, char *file, t_flg *flg);
 void	check_walls(t_map *map, char **map3D);
 void	process_file_content(char *map_path, t_map *my_map);
-void	convert_RGB_to_hex(t_map *map, int color_buff[3], char c);
+void	convert_rgb_to_hex(t_map *map, int color_buff[3], char c);
+void	increasing_flg(t_flg *flg, char vector);
+void	check_flags(t_flg *flg);
 
 // Rendring
 mlx_image_t **ft_load_image(t_mlx *mlx, int num_sprites);
