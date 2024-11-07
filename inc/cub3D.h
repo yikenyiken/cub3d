@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:57:42 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/04 17:52:50 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/05 12:38:34 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct s_map
 	char		*SOpath;
 	char		*WEpath;
 	char		*EApath;
+	int			player_pos[2];
+	double		player_angle;
 	int			F[3];
 	int			C[3];
 	uint32_t	Fhex;

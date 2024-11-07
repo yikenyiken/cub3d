@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/04 18:09:46 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/05 14:51:16 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,16 @@ double	max(double a, double b)
 void	graceful_exit(t_mlx *mlx)
 {
 	free(mlx->data.rays);
-	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_east);
-	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_north);
-	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_south);
-	// mlx_delete_image(mlx->ptr, mlx->imgs.wall_west);
+	mlx_delete_image(mlx->ptr, mlx->imgs.wall_east);
+	mlx_delete_image(mlx->ptr, mlx->imgs.wall_north);
+	mlx_delete_image(mlx->ptr, mlx->imgs.wall_south);
+	mlx_delete_image(mlx->ptr, mlx->imgs.wall_west);
 	// int i = 0;
 	// while (mlx->imgs.sprint_imgs[i])
 	// 	mlx_delete_image(mlx->ptr, mlx->imgs.sprint_imgs[i]);
 	free(mlx->imgs.sprint_imgs);
 	mlx_terminate(mlx->ptr); // this function includes all previously created images in the cleanup process
+	exit(0);
 }
 
 t_ray	*create_rays(t_data *data)
@@ -74,15 +75,14 @@ void	set_player_xy(t_player *player, double x, double y)
 	player->y = y;
 }
 
-void	init_player(t_player *player, t_data *data)
+void	init_player(t_player *player, t_map *map)
 {
-	set_player_xy(player, data->map_width / 2, data->map_height / 2);
-
-	player->angle = M_PI;
+	set_player_xy(player, map->player_pos[0] * 24, map->player_pos[1] * 24);
+	player->angle = map->player_angle;
 	player->color = 0xFF0000FF;
 	player->radius = 4;
 	player->move_step = 2;
-	player->rotation_step = 3 * (M_PI / 180);
+	player->rotation_step = 2 * (M_PI / 180);
 }
 
 void	create_window(t_mlx *mlx)
@@ -185,7 +185,7 @@ void	init_mlx(t_mlx *mlx, t_map *map)
 void	init_cub3d(t_mlx *mlx, t_map *map)
 {
 	init_data(&mlx->data, map);
-	init_player(&mlx->player, &mlx->data);
+	init_player(&mlx->player, map);
 	init_mlx(mlx, map);
 }
 

@@ -11,7 +11,7 @@ CC		= cc
 RM		= rm -rf
 
 
-all		: libmlx $(NAME)
+all		: $(NAME)
 
 libmlx:
 	cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
@@ -31,7 +31,7 @@ fclean	: clean
 re		: fclean all
 
 t		: all clean
-	clear && ./cub3D maps/map1.cub
+	clear && ./cub3D maps/map3.cub
 
 install:
 	sh $(SCRIPT)

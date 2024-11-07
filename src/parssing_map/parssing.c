@@ -6,27 +6,11 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/03 12:33:34 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/05 14:59:26 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/cub3D.h"
-
-int	check(char *str, char *to_find)
-{
-	int	i;
-
-	i = 0;
-	while (to_find[i])
-	{
-		if (to_find[i] != str[i])
-			return (0);
-		i++;
-	}
-	if (to_find[i] == '\0')
-		return (1);
-	return (0);
-}
 
 static	void	check_file_is_valid(char *file)
 {
@@ -93,6 +77,45 @@ void	check_elements(char *map)
 		ft_error("check the element of map\n");
 }
 
+void	check_player_angle(t_map *map, char dir)
+{
+	if (dir == 'N')
+		map->player_angle = (3 * M_PI) / 2;
+	else if (dir == 'S')
+		map->player_angle = M_PI / 2;
+	else if (dir == 'E')
+		map->player_angle = 0.0;
+	else if (dir == 'W')
+		map->player_angle = M_PI;
+}
+
+void	find_player_pos(t_map *map)
+{
+	int		i;
+	int		j;
+	char	**map2d;
+
+	i = 0;
+	map2d = map->map3D;
+	while (map2d[i])
+	{
+		j = 0;
+		while (map2d[i][j])
+		{
+			if (map2d[i][j] == 'N' || map2d[i][j] == 'S'
+				|| map2d[i][j] == 'W' || map2d[i][j] == 'E')
+			{
+				map->player_pos[0] = j;
+				map->player_pos[1] = i;
+				check_player_angle(map, map2d[i][j]);
+				return ;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
 void	process_file_content(char *map_path, t_map *my_map)
 {
 	char	*var_map;
@@ -102,10 +125,11 @@ void	process_file_content(char *map_path, t_map *my_map)
 	check_file_is_valid(map_path);
 	var_map = ft_read_file(map_path);
 	map = check_file_elementes(my_map, var_map, &flg);
+	check_elements(map);
 	convert_rgb_to_hex(my_map, my_map->F, 'F');
 	convert_rgb_to_hex(my_map, my_map->C, 'C');
 	my_map->map3D = ft_split(my_map, map, '\n');
-	check_elements(map);
 	check_walls(my_map, my_map->map3D);
+	find_player_pos(my_map);
 	free(var_map);
 }

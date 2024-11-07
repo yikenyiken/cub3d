@@ -6,19 +6,19 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 09:15:48 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/01 16:15:22 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/05 11:59:20 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/cub3D.h"
 
-int	is_valid_char(char c)
+static int	is_valid_char(char c)
 {
 	return (c == '0' || c == '1' || c == 'N'
 		|| c == 'S' || c == 'E' || c == 'W');
 }
 
-void	check_left_right_side(char **map3D, int rows)
+static void	check_left_right_side(char **map3D, int rows)
 {
 	int	i;
 	int	j;

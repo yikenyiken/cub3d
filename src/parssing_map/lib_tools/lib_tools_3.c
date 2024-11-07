@@ -6,11 +6,27 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:47:29 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/04 18:06:45 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/05 14:52:21 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/cub3D.h"
+
+int	check(char *str, char *to_find)
+{
+	int	i;
+
+	i = 0;
+	while (to_find[i])
+	{
+		if (to_find[i] != str[i])
+			return (0);
+		i++;
+	}
+	if (to_find[i] == '\0')
+		return (1);
+	return (0);
+}
 
 char	*get_line(char *s, char c)
 {
