@@ -6,11 +6,11 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 14:51:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/03 10:54:48 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/11 11:08:26 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../inc/cub3D.h"
+#include "../../../include/cub3d.h"
 
 void	ft_error(char *s)
 {

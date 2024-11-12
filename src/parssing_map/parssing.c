@@ -6,34 +6,24 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/03 12:33:34 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/12 08:55:02 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/cub3D.h"
+#include "../../include/cub3d.h"
 
-int	check(char *str, char *to_find)
-{
-	int	i;
-
-	i = 0;
-	while (to_find[i])
-	{
-		if (to_find[i] != str[i])
-			return (0);
-		i++;
-	}
-	if (to_find[i] == '\0')
-		return (1);
-	return (0);
-}
+void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c);
+char	*add_spaces(char *col, int len);
+void	normalize_map(t_data *data);
+void	find_player_pos(t_data *data);
+void	verify_texture_paths(t_data *data);
 
 static	void	check_file_is_valid(char *file)
 {
 	while (*file)
 	{
 		if (*file == '.')
-			if (check(file, ".cub"))
+			if (check(file, ".cub") && *(file + 4) == '\0')
 				return ;
 		file++;
 	}
@@ -52,7 +42,6 @@ static	char	*ft_read_file(char *map_path)
 	count = 0;
 	if (fd < 0)
 		exit(1);
-	// while (read(fd, &c, 1) == 1 && count <= MAX_WIDTH * MAX_HEIGHT)
 	while (read(fd, &c, 1) == 1)
 		count++;
 	close(fd);
@@ -93,7 +82,7 @@ void	check_elements(char *map)
 		ft_error("check the element of map\n");
 }
 
-void	process_file_content(char *map_path, t_map *my_map)
+void	process_file_content(char *map_path, t_data *data)
 {
 	char	*var_map;
 	char	*map;
@@ -101,11 +90,14 @@ void	process_file_content(char *map_path, t_map *my_map)
 
 	check_file_is_valid(map_path);
 	var_map = ft_read_file(map_path);
-	map = check_file_elementes(my_map, var_map, &flg);
-	convert_rgb_to_hex(my_map, my_map->F, 'F');
-	convert_rgb_to_hex(my_map, my_map->C, 'C');
-	my_map->map3D = ft_split(my_map, map, '\n');
+	map = check_file_elementes(data, var_map, &flg);
 	check_elements(map);
-	check_walls(my_map, my_map->map3D);
+	convert_rgb_to_hex(data, data->F, 'F');
+	convert_rgb_to_hex(data, data->C, 'C');
+	data->map = ft_split(data, map, '\n');
+	check_walls(data, data->map);
+	find_player_pos(data);
+	normalize_map(data);
+	verify_texture_paths(data);
 	free(var_map);
 }

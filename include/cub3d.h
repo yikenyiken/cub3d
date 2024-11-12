@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3D.h                                            :+:      :+:    :+:   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:57:42 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/04 17:52:50 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/12 09:03:11 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 #define CUB3D_H
 
-# include "../mlx/include/MLX42/MLX42.h"
+# include "../lib/MLX42/include/MLX42/MLX42.h"
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <string.h>
 # include <math.h>
-
-// Parssing
 
 typedef struct s_flg
 {
@@ -33,31 +31,6 @@ typedef struct s_flg
 	int	C_flg;
 	int	break_flg;
 }	t_flg;
-
-typedef struct s_map
-{
-	char		**map3D;
-	int			rows_size;
-	char		*NOpath;
-	char		*SOpath;
-	char		*WEpath;
-	char		*EApath;
-	int			F[3];
-	int			C[3];
-	uint32_t	Fhex;
-	uint32_t	Chex;
-	t_flg		*flg;
-}	t_map;
-
-// Rendring
-
-typedef struct s_move_info
-{
-	double	new_x;
-	double	new_y;
-	double	new_angle;
-	int		is_moving;
-}	t_move_info;
 
 typedef struct s_ray
 {
@@ -79,59 +52,71 @@ typedef struct s_ray
 typedef struct s_data
 {
 	double		tile_size;
-	int			rows;
-	int			columns;
 	double		map_width;
 	double		map_height;
 	double		screen_width;
 	double		screen_height;
 	double		fov;
+	double		player_angle;
+	int			rows;
+	int			columns;
+	int			max_width;
+	int			max_height;
 	int			num_rays;
-	uint32_t	F;
-	uint32_t	C;
+	int			hero_frames;
+	int			F[3];
+	int			C[3];
+	int			player_pos[2];
 	char		**map;
+	char		*wall_no_path;
+	char		*wall_we_path;
+	char		*wall_so_path;
+	char		*wall_ea_path;
+	uint32_t	ceiling_color;
+	uint32_t	floor_color;
 	t_ray		*rays;
+	t_flg		*flg;
 }	t_data;
 
-typedef struct s_txtr
+typedef struct s_txtrs
 {
 	mlx_texture_t	*wall_north;
 	mlx_texture_t	*wall_west;
 	mlx_texture_t	*wall_south;
 	mlx_texture_t	*wall_east;
-}	t_txtr;
+}	t_txtrs;
 
-typedef struct s_img
+typedef struct s_imgs
 {
 	mlx_image_t	*frame;
 	mlx_image_t	*wall_north;
 	mlx_image_t	*wall_west;
 	mlx_image_t	*wall_south;
 	mlx_image_t	*wall_east;
-	mlx_image_t	**sprint_imgs;
-	mlx_image_t	**stop_imgs;
-}	t_img;
+}	t_imgs;
 
 typedef struct s_player
 {
 	double		x;
 	double		y;
 	double		angle;
-	uint32_t	color;
+	double		new_angle;
 	int			radius;
 	double		move_step;
 	double		rotation_step;
+	int			is_moving;
+	uint32_t	color;
+	int			big_step;
 }	t_player;
 
 typedef struct s_mlx
 {
-	int			stop;
-	t_data		data;
+	t_data		*data;
 	mlx_t		*ptr;
-	t_txtr		txtrs;
-	t_img		imgs;
-	t_map		map;
+	t_txtrs		txtrs;
+	t_imgs		imgs;
 	t_player	player;
+	int			stop;
 }	t_mlx;
 
 //parssing
@@ -140,25 +125,26 @@ void	ft_error(char *s);
 void	init_flg(t_flg *flg);
 int		check(char *str, char *to_find);
 int		ft_strlen(char *s);
-char	**ft_split(t_map *my_map, char *s, char c);
 char	*ft_trim(char *s);
 int		ft_isdigit(char c);
 int		is_num(char *s);
 long	ft_atoi(const char *str);
 char	*get_line(char *s, char c);
+char	**ft_split(t_data *data, char *s, char c);
 
-char	*check_file_elementes(t_map *my_map, char *file, t_flg *flg);
-void	check_walls(t_map *map, char **map3D);
-void	process_file_content(char *map_path, t_map *my_map);
-void	convert_rgb_to_hex(t_map *map, int color_buff[3], char c);
+char	*check_file_elementes(t_data *data, char *file, t_flg *flg);
+void	check_walls(t_data *data, char **map);
+void	process_file_content(char *map_path, t_data *data);
 void	increasing_flg(t_flg *flg, char vector);
 void	check_flags(t_flg *flg);
+void	free_game(t_data *data);
 
 // Rendring
-mlx_image_t **ft_load_image(t_mlx *mlx, int num_sprites);
-void render_imgs(t_mlx *mlx, mlx_image_t **sprites, int n_sprite);
-void animation(t_mlx *mlx, mlx_image_t **sprites, int n_sprite);
-// void	free_game(t_mlx *mlx, t_map *map);
-void	free_game(t_map *map);
+void	init_cub3d(t_mlx *mlx, t_data *data);
+void	update_player_on_keypress(t_mlx *mlx);
+void	draw_2d_map(t_mlx *mlx);
+void	draw_3d_map(t_mlx *mlx);
+void	cast_rays(t_mlx *mlx);
+void	graceful_exit(t_mlx *mlx, int code);
 
 #endif

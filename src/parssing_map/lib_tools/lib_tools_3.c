@@ -6,11 +6,22 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:47:29 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/04 18:06:45 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/12 08:52:35 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../inc/cub3D.h"
+#include "../../../include/cub3d.h"
+
+void	init_flg(t_flg *flg)
+{
+	flg->N_flg = 0;
+	flg->S_flg = 0;
+	flg->W_flg = 0;
+	flg->E_flg = 0;
+	flg->F_flg = 0;
+	flg->C_flg = 0;
+	flg->break_flg = 0;
+}
 
 char	*get_line(char *s, char c)
 {
@@ -34,7 +45,7 @@ char	*get_line(char *s, char c)
 	return (arr[i] = '\0', arr);
 }
 
-void	convert_rgb_to_hex(t_map *map, int color_buff[3], char c)
+void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c)
 {
 	uint8_t	r;
 	uint8_t	g;
@@ -46,9 +57,9 @@ void	convert_rgb_to_hex(t_map *map, int color_buff[3], char c)
 	b = color_buff[2];
 	a = 255;
 	if (c == 'F')
-		map->Fhex = (a << 24) | (r << 16) | (g << 8) | b;
+		data->floor_color = (a << 24) | (b << 16) | (g << 8) | r;
 	else
-		map->Chex = (a << 24) | (r << 16) | (g << 8) | b;
+		data->ceiling_color = (a << 24) | (b << 16) | (g << 8) | r;
 }
 
 void	increasing_flg(t_flg *flg, char vector)

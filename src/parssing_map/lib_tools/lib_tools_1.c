@@ -6,11 +6,11 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 10:22:47 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/03 10:44:38 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:21:52 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../inc/cub3D.h"
+#include "../../../include/cub3d.h"
 
 int	ft_strlen(char *s)
 {
@@ -78,7 +78,7 @@ char	**free_buff(char **buff, int len)
 	return (NULL);
 }
 
-char	**ft_split(t_map *my_map, char *s, char c)
+char	**ft_split(t_data *data, char *s, char c)
 {
 	char	**arr;
 	int		size;
@@ -87,6 +87,7 @@ char	**ft_split(t_map *my_map, char *s, char c)
 
 	i = 0;
 	j = 0;
+	data->rows = 0;
 	size = get_size(s, c);
 	arr = malloc((size + 1) * sizeof(char *));
 	if (!arr)
@@ -101,6 +102,6 @@ char	**ft_split(t_map *my_map, char *s, char c)
 		j++;
 	}
 	if (c == '\n')
-		my_map->rows_size = j;
+		data->rows = j;
 	return (arr[j] = NULL, arr);
 }
