@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.c                                            :+:      :+:    :+:   */
+/*   math_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/18 12:52:14 by yiken            ###   ########.fr       */
+/*   Created: 2024/11/11 13:05:17 by yiken             #+#    #+#             */
+/*   Updated: 2024/11/11 13:05:27 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-void	game_loop(void *param);
-void	verify_arg_num(int ac);
-
-#include <stdio.h>
-int	main(int ac, char **av)
+double	normalize_angle(double angle)
 {
-	t_mlx	mlx;
+	angle = fmod(angle, (2 * M_PI));
+	if (angle < 0)
+		angle = (2 * M_PI) + angle;
+	return (angle);
+}
 
-	verify_arg_num(ac);
-	process_config_file(&mlx, av[1], &mlx.data);
-	printf("C: %X, F: %X\n", mlx.data.ceiling_color, mlx.data.floor_color);
-	init_cub3d(&mlx);
-	mlx_loop_hook(mlx.ptr, game_loop, &mlx);
-	mlx_loop(mlx.ptr);
-	graceful_exit(&mlx, 0);
+double	distance_between_points(double x1, double y1, double x2, double y2)
+{
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }

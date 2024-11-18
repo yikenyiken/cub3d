@@ -1,20 +1,19 @@
-NAME	:= game
-CFLAGS	:= -Wextra -Wall -Werror -Wunreachable-code -Ofast
-LIBMLX	:= ./mlx
-USER	:= $(shell echo ~)
-
-SCRIPT	:= ./install.sh
-HEADERS	:= -I ./include -I $(LIBMLX)/include
-LIBS	:= $(LIBMLX)/build/libmlx42.a -L$(USER)/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
+NAME	:= cub3D
+CFLAGS	:= -Wextra -Wall -Werror -Ofast
+LIBMLX	:= lib/MLX42
+SCRIPT	:= ./install.zsh
+INCLUDE	:= include/cub3d.h
+HEADERS	:= -I include -I $(LIBMLX)/include
+LIBS	:= $(LIBMLX)/build/libmlx42.a -L/Users/$(USER)/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
 SRCS	:= $(shell find ./src -iname "*.c")
 OBJS	:= ${SRCS:.c=.o}
 
 all: libmlx $(NAME)
 
 libmlx:
-	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4 
+	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
-%.o: %.c
+%.o: %.c $(INCLUDE)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS)
@@ -29,10 +28,10 @@ fclean: clean
 
 re: clean all
 
-t: all
-	@./game
+t: $(NAME)
+	@./$(NAME) maps/map.cub
 
 install:
-	sh $(SCRIPT)
+	@zsh $(SCRIPT)
 
 .PHONY: clean, libmlx
