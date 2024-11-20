@@ -1,0 +1,15 @@
+EA /Users/messkely/Desktop/cub3d/temp_assets/wall_east.png
+NO /Users/messkely/Desktop/cub3d/temp_assets/wall_north.png
+SO /Users/messkely/Desktop/cub3d/temp_assets/wall_south.png
+WE /Users/messkely/Desktop/cub3d/temp_assets/wall_west.png
+
+
+C 255, 255, 255
+F 255, 255, 255
+
+11111111
+10000001
+10000001
+100N0001
+10000001
+11111111
