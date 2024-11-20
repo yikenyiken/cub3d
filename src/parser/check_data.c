@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_data.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/17 18:25:44 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/20 12:53:31 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	check_color_range(t_data *data, char *s, int i, char c)
 	{
 		if (c == 'F')
 			data->floor_rgb_buf[i] = nb;
-		else
+		else if (c == 'C')
 			data->ceiling_rgb_buf[i] = nb;
 	}
 	else
@@ -79,8 +79,6 @@ static void	parse_color_val(t_data *data, char *line, char c)
 		free(nb);
 		idx++;
 	}
-	convert_rgb_to_hex(data, data->floor_rgb_buf, 'F');
-	convert_rgb_to_hex(data, data->ceiling_rgb_buf, 'C');
 	free(tmp);
 }
 
@@ -97,6 +95,10 @@ int	check_colors(t_data *data, char *file, char c, int idx)
 	parse_color_val(data, line, c);
 	free(line);
 	increasing_flg(data->flg, c);
+	if (c == 'F')
+		convert_rgb_to_hex(data, data->floor_rgb_buf, 'F');
+	else if (c == 'C')
+		convert_rgb_to_hex(data, data->ceiling_rgb_buf, 'C');
 	free(data->floor_rgb_buf);
 	free(data->ceiling_rgb_buf);
 	return (idx);

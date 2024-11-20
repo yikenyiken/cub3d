@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/17 17:28:35 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/20 12:52:26 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
+#include <stdio.h>
 
 typedef struct s_flg
 {

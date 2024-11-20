@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:52:35 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/18 12:52:14 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/20 12:32:42 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	game_loop(void *param);
 void	verify_arg_num(int ac);
 
-#include <stdio.h>
 int	main(int ac, char **av)
 {
 	t_mlx	mlx;
@@ -28,3 +27,7 @@ int	main(int ac, char **av)
 	mlx_loop(mlx.ptr);
 	graceful_exit(&mlx, 0);
 }
+// 1. Ray casting
+// 2. intersection with walls
+// 3. calculating distence
+// 4. corecting fish eyes
