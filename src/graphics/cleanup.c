@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/18 13:27:19 by yiken             #+#    #+#             */
+/*   Updated: 2024/11/20 12:21:54 by yiken            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/cub3d.h"
 
 void	free_map(char **map, int rows)
@@ -24,6 +36,7 @@ void	free_parser_allocations(t_mlx *mlx)
 	free_txtr_paths(&mlx->data);
 }
 
+// Cleans all resources used by the game
 void	graceful_exit(t_mlx *mlx, int code)
 {
 	free_parser_allocations(mlx);

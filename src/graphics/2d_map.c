@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 18:38:44 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/17 18:09:13 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/23 18:23:48 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,12 @@ void	draw_player_head(t_mlx *mlx);
 void	frame_put_pixel(t_mlx *mlx, int x, int y, uint32_t color);
 void	draw_player(t_mlx *mlx);
 
-int	is_wall_hit(t_mlx *mlx, double x, double y)
+int	is_border_pixel(int tile_size, int x, int y)
 {
-	int	map_x;
-	int	map_y;
-
-	map_x = x / mlx->data.tile_size;
-	map_y = y / mlx->data.tile_size;
-	return (mlx->data.map[map_y][map_x] - '0');
+	if (!(tile_size - 1 - (x % tile_size))
+		|| !(tile_size - 1 - (y % tile_size)))
+		return (1);
+	return (0);
 }
 
 void	draw_map_tile(int x, int y, t_mlx *mlx, uint32_t color)
@@ -32,12 +30,15 @@ void	draw_map_tile(int x, int y, t_mlx *mlx, uint32_t color)
 	int	j;
 
 	i = y;
-	while (i < y + mlx->data.tile_size)
+	while (i < y + mlx->data.mini_tile_size)
 	{
 		j = x;
-		while (j < x + mlx->data.tile_size)
+		while (j < x + mlx->data.mini_tile_size)
 		{
-			frame_put_pixel(mlx, j, i, color);
+			if (is_border_pixel(mlx->data.mini_tile_size, j, i))
+				frame_put_pixel(mlx, j, i, mlx->data.tile_border_color);
+			else
+				frame_put_pixel(mlx, j, i, color);
 			j++;
 		}
 		i++;
@@ -58,11 +59,11 @@ void	draw_map(t_mlx *mlx)
 		while (j < mlx->data.columns)
 		{
 			if (map[i][j] == '1')
-				draw_map_tile(j * mlx->data.tile_size,
-					i * mlx->data.tile_size, mlx, mlx->data.floor_color);
+				draw_map_tile(j * mlx->data.mini_tile_size,
+					i * mlx->data.mini_tile_size, mlx, mlx->data.floor_color);
 			else if (map[i][j] == '0')
-				draw_map_tile(j * mlx->data.tile_size,
-					i * mlx->data.tile_size, mlx, 0xFFFFFFFF); // is this color to reside in a variable
+				draw_map_tile(j * mlx->data.mini_tile_size,
+					i * mlx->data.mini_tile_size, mlx, mlx->data.map_color);
 			j++;
 		}
 		i++;

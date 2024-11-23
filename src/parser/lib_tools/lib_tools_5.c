@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 08:53:26 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/17 18:14:11 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/20 12:26:11 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	check_blank_lines(char *map)
 		{
 			found_content = 1;
 			if (blank_line)
-				ft_error("Map contains empty lines within content\n");
+				ft_error("empty line in map\n");
 		}
 		while (*map && *map != '\n')
 			map++;

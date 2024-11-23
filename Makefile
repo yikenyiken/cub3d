@@ -29,7 +29,7 @@ fclean: clean
 re: clean all
 
 t: $(NAME)
-	@./$(NAME) maps/map.cub
+	@./$(NAME) maps/maze.cub
 
 install:
 	@zsh $(SCRIPT)

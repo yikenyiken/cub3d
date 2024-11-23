@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/17 17:23:54 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/21 15:28:57 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	normalize_map(t_data *data);
 void	find_player_pos(t_mlx *mlx);
 void	verify_texture_paths(t_data *data);
 void	check_blank_lines(char *map);
+void	check_map_dimensions(t_data *data);
 
 int	is_0_or_dirs(char c)
 {
@@ -34,7 +35,7 @@ void	check_file_is_valid(char *file)
 				return ;
 		file++;
 	}
-	ft_error("Invalid extension. Please use .cub.\n");
+	ft_error("usage: ./cub3D [file name].cub\n");
 }
 
 char	*ft_read_file(char *map_path)
@@ -45,18 +46,20 @@ char	*ft_read_file(char *map_path)
 	int		count;
 
 	fd = open(map_path, O_RDONLY);
-	count = 0;
 	if (fd < 0)
-		ft_error("invalid path\n");
+		ft_error("cannot read configuration file\n");
+	count = 0;
 	while (read(fd, &c, 1) == 1)
 		count++;
 	close(fd);
 	if (count == 0)
-		ft_error("empty file\n");
+		ft_error("configuration file is empty\n");
 	map = (char *)malloc((count + 1) * sizeof(char));
 	if (!map)
 		ft_error("Memory allocation failure\n");
 	fd = open(map_path, O_RDONLY);
+	if (fd < 0)
+		(free(map), ft_error("cannot read configuration file\n"));
 	read(fd, map, count);
 	map[count] = '\0';
 	return (close(fd), map);
@@ -75,17 +78,18 @@ void	check_elements(char *map)
 		{
 			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E'
 					&& map[i] != 'W') || p_flg)
-				ft_error("check the map elements\n");
+				ft_error("outsider character(s) found in map\n");
 			else
 				p_flg = 1;
 		}
 		i++;
 	}
 	if (map[i] == '\0' && !p_flg)
-		ft_error("check the map elements\n");
+		ft_error("player character missing (N E W S)\n");
 	check_blank_lines(map);
 }
 
+// Detects any misconfiguration in the config file and gets the retievable data
 void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 {
 	char	*var_map;
@@ -95,11 +99,12 @@ void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 	check_file_is_valid(map_path);
 	var_map = ft_read_file(map_path);
 	map = check_file_elementes(data, var_map, &flg);
+	free(var_map);
 	check_elements(map);
 	data->map = ft_split(data, map, '\n');
 	check_walls(data, data->map);
+	check_map_dimensions(data); // maybe get rid of
 	find_player_pos(mlx);
 	normalize_map(data);
 	verify_texture_paths(data);
-	free(var_map);
 }

@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/17 18:25:44 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/22 16:22:46 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ static void	check_color_range(t_data *data, char *s, int i, char c)
 {
 	int	nb;
 
-	if (!is_num(s) || ft_atoi(s) > 2147483647)
-		ft_error("the colors data is out of the range\n");
+	if (!is_num(s))
+		ft_error("found outsider character(s) in color(s)\n");
+	if (ft_atoi(s) > 2147483647)
+		ft_error("color value(s) out of range\n");
 	nb = ft_atoi(s);
 	if (nb >= 0 && nb <= 255)
 	{
@@ -54,7 +56,7 @@ static void	check_color_range(t_data *data, char *s, int i, char c)
 			data->ceiling_rgb_buf[i] = nb;
 	}
 	else
-		ft_error("the colors data is out of the range\n");
+		ft_error("color value(s) out of range\n");
 }
 
 static void	parse_color_val(t_data *data, char *line, char c)
@@ -79,8 +81,6 @@ static void	parse_color_val(t_data *data, char *line, char c)
 		free(nb);
 		idx++;
 	}
-	convert_rgb_to_hex(data, data->floor_rgb_buf, 'F');
-	convert_rgb_to_hex(data, data->ceiling_rgb_buf, 'C');
 	free(tmp);
 }
 
@@ -97,6 +97,10 @@ int	check_colors(t_data *data, char *file, char c, int idx)
 	parse_color_val(data, line, c);
 	free(line);
 	increasing_flg(data->flg, c);
+	if (c == 'F')
+		convert_rgb_to_hex(data, data->floor_rgb_buf, 'F');
+	else if (c == 'C')
+		convert_rgb_to_hex(data, data->ceiling_rgb_buf, 'C');
 	free(data->floor_rgb_buf);
 	free(data->ceiling_rgb_buf);
 	return (idx);

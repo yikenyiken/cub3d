@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:54:59 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/18 12:50:43 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/20 12:21:45 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,16 @@ uint32_t	*get_wall_img_pxbuff(t_ray *ray, t_mlx *mlx)
 	return ((uint32_t *)wall_img_pixel_buffer);
 }
 
+void	verify_arg_num(int ac)
+{
+	if (ac != 2)
+	{
+		write(2, "Wrong argument number\n", 22);
+		exit(1);
+	}
+}
+
+// Renders the game and adjusts it by key events
 void	game_loop(void *param)
 {
 	t_mlx	*mlx;
@@ -47,13 +57,4 @@ void	game_loop(void *param)
 	cast_rays(mlx);
 	draw_3d_map(mlx);
 	draw_2d_map(mlx);
-}
-
-void	verify_arg_num(int ac)
-{
-	if (ac != 2)
-	{
-		write(2, "Wrong argument number\n", 22);
-		exit(1);
-	}
 }

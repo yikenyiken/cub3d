@@ -21,3 +21,15 @@ int	*create_rgb_buf()
 		return (NULL);
 	return (rgb_buf);
 }
+
+void	check_map_dimensions(t_data *data)
+{
+	const int	max_cols = 100;
+	const int	max_rows = 40;
+
+	if (data->columns > max_cols || data->rows > max_rows)
+	{
+		free_game(data);
+		ft_error("map dimensions limit exceeded\n");
+	}
+}

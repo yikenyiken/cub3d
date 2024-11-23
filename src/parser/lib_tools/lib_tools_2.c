@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 14:51:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/11 11:08:26 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:28:51 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_error(char *s)
 {
-	write(2, "Error: ", 7);
+	write(2, "Error\n", 6);
 	write(2, s, ft_strlen(s));
 	exit(1);
 }
@@ -86,8 +86,6 @@ int	is_num(char *s)
 		i++;
 	if (s[i] == '+')
 		i++;
-	if (s[i] == '0' && ft_isdigit(s[i + 1]))
-		return (0);
 	while (s[i])
 	{
 		if (!ft_isdigit(s[i]))

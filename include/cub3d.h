@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/17 17:28:35 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/23 18:23:42 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_ray
 typedef struct s_data
 {
 	double		tile_size;
+	double		mini_tile_size;
 	int			rows;
 	int			columns;
 	double		map_width;
@@ -62,13 +63,15 @@ typedef struct s_data
 	t_ray		*rays;
 	uint32_t	ceiling_color;
 	uint32_t	floor_color;
+	uint32_t	map_color;
+	uint32_t	tile_border_color;
 	char		*wall_no_path;
 	char		*wall_we_path;
 	char		*wall_so_path;
 	char		*wall_ea_path;
-	int			*ceiling_rgb_buf; // added
-	int			*floor_rgb_buf; // added
-	t_flg		*flg; // added
+	int			*ceiling_rgb_buf;
+	int			*floor_rgb_buf;
+	t_flg		*flg;
 }	t_data;
 
 typedef struct s_txtrs
@@ -92,10 +95,13 @@ typedef struct s_player
 {
 	double		x;
 	double		y;
+	double		mini_x;
+	double		mini_y;
 	double		angle;
 	double		new_angle;
 	int			radius;
 	double		move_step;
+	double		mini_move_step;
 	double		rotation_step;
 	int			is_moving;
 	uint32_t	color;

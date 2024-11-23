@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:47:29 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/13 12:43:05 by messkely         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:58:10 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,5 @@ void	check_flags(t_flg *flg)
 	if (flg->N_flg != 1 || flg->S_flg != 1 || flg->W_flg != 1
 		|| flg->E_flg != 1 || flg->F_flg != 1
 		|| flg->C_flg != 1)
-		ft_error("Texture path or color data missing\n");
+		ft_error("configuration file is poorly constructed\n");
 }

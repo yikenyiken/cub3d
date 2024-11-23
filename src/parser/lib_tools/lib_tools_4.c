@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:46:36 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/17 16:57:03 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/18 17:20:19 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	single_path_verify(t_data *data, char *path)
 	if (fd < 0)
 	{
 		free_game(data);
-		ft_error("invalid path\n");
+		ft_error("verify texture elements' information\n");
 	}
 	close(fd);
 }

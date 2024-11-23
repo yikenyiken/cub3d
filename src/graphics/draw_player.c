@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 12:42:02 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/11 12:42:07 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/23 17:00:26 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ void	draw_right_arm(t_mlx *mlx)
 	double	waist_right_y;
 
 	i = 0;
-	while (i < mlx->player.big_step)
+	while (i < (int)mlx->player.radius)
 	{
-		waist_right_x = mlx->player.x + cos(mlx->player.angle + M_PI / 2)
+		waist_right_x = mlx->player.mini_x + cos(mlx->player.angle + M_PI / 2)
 			* mlx->player.radius;
-		waist_right_y = mlx->player.y + sin(mlx->player.angle + M_PI / 2)
+		waist_right_y = mlx->player.mini_y + sin(mlx->player.angle + M_PI / 2)
 			* mlx->player.radius;
 		x = waist_right_x + i * cos(mlx->player.angle);
 		y = waist_right_y + i * sin(mlx->player.angle);
@@ -45,11 +45,11 @@ void	draw_left_arm(t_mlx *mlx)
 	double	waist_left_y;
 
 	i = 0;
-	while (i < mlx->player.big_step)
+	while (i < (int)mlx->player.radius)
 	{
-		waist_left_x = mlx->player.x + cos(mlx->player.angle - M_PI / 2)
+		waist_left_x = mlx->player.mini_x + cos(mlx->player.angle - M_PI / 2)
 			* mlx->player.radius;
-		waist_left_y = mlx->player.y + sin(mlx->player.angle - M_PI / 2)
+		waist_left_y = mlx->player.mini_y + sin(mlx->player.angle - M_PI / 2)
 			* mlx->player.radius;
 		x = waist_left_x + i * cos(mlx->player.angle);
 		y = waist_left_y + i * sin(mlx->player.angle);
@@ -76,8 +76,8 @@ void	draw_player_head(t_mlx *mlx)
 		while (x <= mlx->player.radius)
 		{
 			if (x * x + y * y <= mlx->player.radius * mlx->player.radius)
-				frame_put_pixel(mlx, mlx->player.x + x,
-					mlx->player.y + y, mlx->player.color);
+				frame_put_pixel(mlx, mlx->player.mini_x + x,
+					mlx->player.mini_y + y, mlx->player.color);
 			x++;
 		}
 		y++;
