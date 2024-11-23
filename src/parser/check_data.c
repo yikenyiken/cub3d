@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/22 16:22:46 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/23 19:15:32 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	check_color_range(t_data *data, char *s, int i, char c)
 	{
 		if (c == 'F')
 			data->floor_rgb_buf[i] = nb;
-		else
+		else if (c == 'C')
 			data->ceiling_rgb_buf[i] = nb;
 	}
 	else
@@ -97,6 +97,10 @@ int	check_colors(t_data *data, char *file, char c, int idx)
 	parse_color_val(data, line, c);
 	free(line);
 	increasing_flg(data->flg, c);
+	if (c == 'F')
+		convert_rgb_to_hex(data, data->floor_rgb_buf, 'F');
+	else if (c == 'C')
+		convert_rgb_to_hex(data, data->ceiling_rgb_buf, 'C');
 	if (c == 'F')
 		convert_rgb_to_hex(data, data->floor_rgb_buf, 'F');
 	else if (c == 'C')

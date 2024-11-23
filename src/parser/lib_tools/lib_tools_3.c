@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:47:29 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/18 16:58:10 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/23 19:15:10 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c)
 	a = 255;
 	if (c == 'F')
 		data->floor_color = (a << 24) | (b << 16) | (g << 8) | r;
-	else
+	else if (c == 'C')
 		data->ceiling_color = (a << 24) | (b << 16) | (g << 8) | r;
 }
 
