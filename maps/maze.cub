@@ -1,7 +1,7 @@
-NO /Users/yiken/Desktop/cubic/temp_assets/wall_north.png
-WE /Users/yiken/Desktop/cubic/temp_assets/wall_west.png
-SO /Users/yiken/Desktop/cubic/temp_assets/wall_south.png
-EA /Users/yiken/Desktop/cubic/temp_assets/wall_east.png
+NO /home/yiken/mywork/cub3d/wall_textures/wall_north.png
+WE /home/yiken/mywork/cub3d/wall_textures/wall_west.png
+SO /home/yiken/mywork/cub3d/wall_textures/wall_south.png
+EA /home/yiken/mywork/cub3d/wall_textures/wall_east.png
 C 179, 255, 255
 F 0, 179, 0
 
