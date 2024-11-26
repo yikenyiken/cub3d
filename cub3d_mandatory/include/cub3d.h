@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/25 19:29:26 by yiken            ###   ########.fr       */
+/*   Updated: 2024/11/26 21:53:37 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
-#include <stdio.h>
 
 typedef struct s_flg
 {
