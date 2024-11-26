@@ -18,7 +18,7 @@ libmlx:
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME) 
 
 %.o: %.c $(INCLUDE)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
