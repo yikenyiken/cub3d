@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 14:51:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/25 16:20:45 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 14:25:02 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ int	ft_isdigit(char c)
 	return (c >= '0' && c <= '9');
 }
 
-long	ft_atoi(const char *str)
+size_t	ft_atoi(const char *str)
 {
-	int		i;
-	int		sign;
-	long	res;
+	int			i;
+	int			sign;
+	size_t	res;
 
 	i = 0;
 	res = 0;
@@ -69,7 +69,7 @@ long	ft_atoi(const char *str)
 	while (ft_isdigit(str[i]) && str[i])
 	{
 		res = res * 10 + (str[i++] - 48);
-		if ((res * sign) < -2147483648 && (res * sign) > 2147483647)
+		if ((res * sign) > 2147483647)
 			return (2147483649);
 	}
 	return (sign * res);

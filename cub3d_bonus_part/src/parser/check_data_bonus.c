@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_data_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:20 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 13:40:18 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,20 @@ static int	check_texture(t_data *data, char *file, char vector, int idx)
 		i++;
 	line = get_line(&file[i], '\n');
 	if (!line)
-		ft_error("Memory allocation failed\n");
+		(free(file), ft_error("Memory allocation failed\n"));
 	line = ft_trim(line);
-	if (vector == 'N')
+	if (vector == 'N' && data->flg->n_flg == 0)
 		data->wall_no_path = line;
-	if (vector == 'S')
+	else if (vector == 'S' && data->flg->s_flg == 0)
 		data->wall_so_path = line;
-	if (vector == 'W')
+	else if (vector == 'W' && data->flg->w_flg == 0)
 		data->wall_we_path = line;
-	if (vector == 'E')
+	else if (vector == 'E' && data->flg->e_flg == 0)
 		data->wall_ea_path = line;
+	else
+		(free(file), ft_error("duplicated texture element found\n"));
 	increasing_flg(data->flg, vector);
-	return (i++, i + ft_strlen(line));
+	return (i + ft_strlen(line) + 1);
 }
 
 static void	check_color_range(t_data *data, char *s, int i, char c)
@@ -44,9 +46,9 @@ static void	check_color_range(t_data *data, char *s, int i, char c)
 	int	nb;
 
 	if (!is_num(s))
-		ft_error("found outsider character(s) in color(s)\n");
+		free_if_error(data, s, "found outsider character in color(s)\n");
 	if (ft_atoi(s) > 2147483647)
-		ft_error("color value(s) out of range\n");
+		free_if_error(data, s, "color value(s) out of range\n");
 	nb = ft_atoi(s);
 	if (nb >= 0 && nb <= 255)
 	{
@@ -56,7 +58,7 @@ static void	check_color_range(t_data *data, char *s, int i, char c)
 			data->ceiling_rgb_buf[i] = nb;
 	}
 	else
-		ft_error("color value(s) out of range\n");
+		free_if_error(data, s, "color value(s) out of range\n");
 }
 
 static void	parse_color_val(t_data *data, char *line, char c)
@@ -72,7 +74,10 @@ static void	parse_color_val(t_data *data, char *line, char c)
 	while (tmp[idx])
 		idx++;
 	if (idx != 3)
+	{
+		free_map(tmp, idx);
 		ft_error("Color format syntax error.\n");
+	}
 	idx = 0;
 	while (idx < 3)
 	{
@@ -93,6 +98,8 @@ int	check_colors(t_data *data, char *file, char c, int idx)
 	while (file[idx] && (file[idx] == ' ' || file[idx] == '\n'))
 		idx++;
 	line = get_line(file + idx, '\n');
+	if (!line)
+		(free_txtr_paths(data), ft_error("error of allocation\n"));
 	idx += ft_strlen(line);
 	parse_color_val(data, line, c);
 	free(line);
@@ -115,8 +122,6 @@ char	*check_file_elementes(t_data *data, char *file, t_flg *flg)
 	int	i;
 
 	i = 0;
-	data->flg = flg;
-	init_flg(data->flg);
 	while (file[i])
 	{
 		if (check(file + i, "NO"))

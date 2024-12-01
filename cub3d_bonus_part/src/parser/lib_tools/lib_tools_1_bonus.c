@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_1_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 10:22:47 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:20 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 13:08:43 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ char	**ft_split(t_data *data, char *s, char c)
 			i++;
 		arr[j] = ft_substr(s, c, &i);
 		if (!arr[j])
-			return (free_buff(arr, j));
+			return (free_txtr_paths(data), free_buff(arr, j));
 		j++;
 	}
 	arr[j] = NULL;

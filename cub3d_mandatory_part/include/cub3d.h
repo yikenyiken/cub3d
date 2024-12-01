@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 17:38:35 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 14:24:45 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@
 
 typedef struct s_flg
 {
-	int	N_flg;
-	int	S_flg;
-	int	W_flg;
-	int	E_flg;
-	int	F_flg;
-	int	C_flg;
+	int	n_flg;
+	int	s_flg;
+	int	w_flg;
+	int	e_flg;
+	int	f_flg;
+	int	c_flg;
 	int	break_flg;
 }	t_flg;
 
@@ -108,25 +108,24 @@ typedef struct s_mlx
 	t_player	player;
 }	t_mlx;
 
-// graphics
-
 void	init_cub3d(t_mlx *mlx);
 void	update_player_on_keypress(t_mlx *mlx);
-void	draw_2d_map(t_mlx *mlx); // 
+void	draw_2d_map(t_mlx *mlx);
 void	draw_3d_map(t_mlx *mlx);
 void	cast_rays(t_mlx *mlx);
+void	free_map(char **map, int rows);
+void	free_txtr_paths(t_data *data);
 void	graceful_exit(t_mlx *mlx, int code);
 
-// parser
-
 void	ft_error(char *s);
-void	init_flg(t_flg *flg);
+void	init_flg_and_txt(t_data *data, t_flg *flg);
+void	free_if_error(t_data *data, char *s, char *str);
 int		check(char *str, char *to_find);
 int		ft_strlen(char *s);
 char	*ft_trim(char *s);
 int		ft_isdigit(char c);
 int		is_num(char *s);
-long	ft_atoi(const char *str);
+size_t	ft_atoi(const char *str);
 char	*get_line(char *s, char c);
 int		go_back(char *file, int i);
 int		*create_rgb_buf(void);

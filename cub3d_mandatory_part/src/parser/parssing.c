@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parssing.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/25 18:42:57 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 13:06:13 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*add_spaces(char *col, int len);
 void	normalize_map(t_data *data);
 void	find_player_pos(t_mlx *mlx);
 void	verify_texture_paths(t_data *data);
-void	check_blank_lines(char *map);
+void	check_blank_lines(t_data *data, char *map);
 
 int	is_0_or_dirs(char c)
 {
@@ -64,7 +64,7 @@ char	*ft_read_file(char *map_path)
 	return (close(fd), map);
 }
 
-void	check_elements(char *map)
+void	check_elements(t_data *data, char *map)
 {
 	int		p_flg;
 	int		i;
@@ -77,15 +77,18 @@ void	check_elements(char *map)
 		{
 			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E'
 					&& map[i] != 'W') || p_flg)
-				ft_error("outsider character(s) found in map\n");
+				(free_txtr_paths(data), ft_error("outsider character found\n"));
 			else
 				p_flg = 1;
 		}
 		i++;
 	}
 	if (map[i] == '\0' && !p_flg)
+	{
+		free_txtr_paths(data);
 		ft_error("player character missing (N E W S)\n");
-	check_blank_lines(map);
+	}
+	check_blank_lines(data, map);
 }
 
 // Detects any misconfiguration in the config file and gets the retievable data
@@ -95,11 +98,13 @@ void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 	char	*map;
 	t_flg	flg;
 
+	data->flg = &flg;
+	init_flg_and_txt(data, data->flg);
 	check_file_is_valid(map_path);
 	var_map = ft_read_file(map_path);
 	map = check_file_elementes(data, var_map, &flg);
 	free(var_map);
-	check_elements(map);
+	check_elements(data, map);
 	data->map = ft_split(data, map, '\n');
 	check_walls(data, data->map);
 	find_player_pos(mlx);

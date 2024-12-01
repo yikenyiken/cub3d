@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_walls_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 09:15:48 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:20 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 12:48:54 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	is_valid_char(char c)
 		|| c == 'S' || c == 'E' || c == 'W');
 }
 
-static void	check_left_right_side(char **map, int rows)
+static void	check_left_right_side(t_data *data, char **map, int rows)
 {
 	int	i;
 	int	j;
@@ -35,7 +35,10 @@ static void	check_left_right_side(char **map, int rows)
 		{
 			if ((map[i][0] != '1' && map[i][0] != ' ')
 				|| (map[i][cols - 1] != '1' && map[i][cols - 1] != ' '))
-				ft_error("map must be surrounded by walls\n"); // map must be surrounded by walls
+			{
+				free_game(data);
+				ft_error("map must be surrounded by walls\n");
+			}
 			j++;
 		}
 		i++;
@@ -45,15 +48,15 @@ static void	check_left_right_side(char **map, int rows)
 void	check_dirs_of_0(t_data *data, int i, int j, int cols)
 {
 	if (j == 0 || j == cols - 1 || i == 0 || i == data->rows - 1)
-		ft_error("poorly constructed map\n");
+		(free_game(data), ft_error("poorly constructed map\n"));
 	if (j < cols - 1 && !is_valid_char(data->map[i][j + 1]))
-		ft_error("poorly constructed map\n");
+		(free_game(data), ft_error("poorly constructed map\n"));
 	if (j > 0 && !is_valid_char(data->map[i][j - 1]))
-		ft_error("poorly constructed map\n");
+		(free_game(data), ft_error("poorly constructed map\n"));
 	if (i < data->rows - 1 && !is_valid_char(data->map[i + 1][j]))
-		ft_error("poorly constructed map\n");
+		(free_game(data), ft_error("poorly constructed map\n"));
 	if (i > 0 && !is_valid_char(data->map[i - 1][j]))
-		ft_error("poorly constructed map\n");
+		(free_game(data), ft_error("poorly constructed map\n"));
 }
 
 void	check_0_is_dilemited(t_data *data)
@@ -92,7 +95,7 @@ void	check_walls(t_data *data, char **map)
 	while (i < cols)
 	{
 		if (map[0][i] != '1' && map[0][i] != ' ')
-			ft_error("map must be surrounded by walls\n");
+			(free_game(data), ft_error("map must be surrounded by walls\n"));
 		i++;
 	}
 	cols = ft_strlen(map[rows - 1]);
@@ -100,9 +103,9 @@ void	check_walls(t_data *data, char **map)
 	while (i < cols)
 	{
 		if (map[rows - 1][i] != '1' && map[rows - 1][i] != ' ')
-			ft_error("map must be surrounded by walls\n");
+			(free_game(data), ft_error("map must be surrounded by walls\n"));
 		i++;
 	}
-	check_left_right_side(map, rows);
+	check_left_right_side(data, map, rows);
 	check_0_is_dilemited(data);
 }
