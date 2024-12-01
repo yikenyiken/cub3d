@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 09:38:24 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 13:42:20 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:30:02 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ int	*create_rgb_buf(void)
 	return (rgb_buf);
 }
 
-void	free_if_error(t_data *data, char *s, char *str)
+void	free_if_error(t_data *data, char **s, int idx, char *str)
 {
-	free_txtr_paths(data);
+	free_txtr_colors(data);
+	while (idx < 3)
+		free(s[idx++]);
 	free(s);
 	ft_error(str);
 }

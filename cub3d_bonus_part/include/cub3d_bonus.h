@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 09:53:48 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 14:26:52 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:27:19 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,13 +124,15 @@ void	draw_3d_map(t_mlx *mlx);
 void	cast_rays(t_mlx *mlx);
 void	free_map(char **map, int rows);
 void	free_txtr_paths(t_data *data);
+void	free_txtr_colors(t_data *data);
 void	graceful_exit(t_mlx *mlx, int code);
 
 void	ft_error(char *s);
-void	init_flg_and_txt(t_data *data, t_flg *flg);
-void	free_if_error(t_data *data, char *s, char *str);
+void	init_parse_data(t_data *data, t_flg *flg);
+void	free_if_error(t_data *data, char **s, int idx, char *str);
 int		check(char *str, char *to_find);
 int		ft_strlen(char *s);
+char	**free_buff(char **buff, int len);
 char	*ft_trim(char *s);
 int		ft_isdigit(char c);
 int		is_num(char *s);

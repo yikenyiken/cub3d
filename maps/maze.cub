@@ -1,14 +1,15 @@
-C 179, 255, 92
 
 NO wall_textures/wall_north.png
-F 0, 179, 0
 WE               wall_textures/wall_west.png        
+F 0, 179, 045
+C 12,34 , 99
 
 
 
 
 SO wall_textures/wall_south.png
 EA wall_textures/wall_east.png
+
 
 
 

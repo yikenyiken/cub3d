@@ -6,13 +6,13 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:47:29 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 13:05:25 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:38:31 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/cub3d_bonus.h"
 
-void	init_flg_and_txt(t_data *data, t_flg *flg)
+void	init_parse_data(t_data *data, t_flg *flg)
 {
 	flg->n_flg = 0;
 	flg->s_flg = 0;
@@ -25,6 +25,8 @@ void	init_flg_and_txt(t_data *data, t_flg *flg)
 	data->wall_so_path = NULL;
 	data->wall_we_path = NULL;
 	data->wall_ea_path = NULL;
+	data->ceiling_rgb_buf = NULL;
+	data->floor_rgb_buf = NULL;
 }
 
 char	*get_line(char *s, char c)

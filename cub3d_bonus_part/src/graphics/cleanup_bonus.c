@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 13:27:19 by yiken             #+#    #+#             */
-/*   Updated: 2024/12/01 11:00:32 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:28:05 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,16 @@ void	free_txtr_paths(t_data *data)
 	free(data->wall_we_path);
 	free(data->wall_so_path);
 	free(data->wall_ea_path);
+}
+
+void	free_txtr_colors(t_data *data)
+{
+	free(data->wall_no_path);
+	free(data->wall_we_path);
+	free(data->wall_so_path);
+	free(data->wall_ea_path);
+	free(data->ceiling_rgb_buf);
+	free(data->floor_rgb_buf);
 }
 
 void	free_parser_allocations(t_mlx *mlx)

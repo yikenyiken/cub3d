@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 14:51:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 14:25:02 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:24:38 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ size_t	ft_atoi(const char *str)
 {
 	int			i;
 	int			sign;
-	size_t	res;
+	size_t		res;
 
 	i = 0;
 	res = 0;

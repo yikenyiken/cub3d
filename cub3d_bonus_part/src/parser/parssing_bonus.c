@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 13:06:07 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:09:01 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 	t_flg	flg;
 
 	data->flg = &flg;
-	init_flg_and_txt(data, data->flg);
+	init_parse_data(data, data->flg);
 	check_file_is_valid(map_path);
 	var_map = ft_read_file(map_path);
 	map = check_file_elementes(data, var_map, &flg);
