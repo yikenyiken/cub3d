@@ -6,11 +6,12 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 13:41:58 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 14:25:24 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
+#include <stdio.h>
 
 void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c);
 
@@ -50,6 +51,7 @@ static void	check_color_range(t_data *data, char *s, int i, char c)
 	if (ft_atoi(s) > 2147483647)
 		free_if_error(data, s, "color value(s) out of range\n");
 	nb = ft_atoi(s);
+	printf("nb = %d\n", nb);
 	if (nb >= 0 && nb <= 255)
 	{
 		if (c == 'F')

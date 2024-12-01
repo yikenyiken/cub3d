@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/12/01 13:45:59 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/01 14:24:45 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int		ft_strlen(char *s);
 char	*ft_trim(char *s);
 int		ft_isdigit(char c);
 int		is_num(char *s);
-long	ft_atoi(const char *str);
+size_t	ft_atoi(const char *str);
 char	*get_line(char *s, char c);
 int		go_back(char *file, int i);
 int		*create_rgb_buf(void);

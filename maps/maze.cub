@@ -1,4 +1,4 @@
-C 179, 255, 255
+C 179, 255, 9223372036854775808
 
 NO wall_textures/wall_north.png
 F 0, 179, 0
