@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lib_tools_6_bonus.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/01 09:46:56 by messkely          #+#    #+#             */
+/*   Updated: 2024/12/01 13:38:42 by messkely         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../include/cub3d_bonus.h"
 
 int	go_back(char *file, int i)
@@ -11,7 +23,7 @@ int	go_back(char *file, int i)
 	return (i);
 }
 
-int	*create_rgb_buf()
+int	*create_rgb_buf(void)
 {
 	const int	colors_n = 3;
 	int			*rgb_buf;
@@ -32,4 +44,11 @@ void	check_map_dimensions(t_data *data)
 		free_game(data);
 		ft_error("map dimensions limit exceeded\n");
 	}
+}
+
+void	free_if_error(t_data *data, char *s, char *str)
+{
+	free_txtr_paths(data);
+	free(s);
+	ft_error(str);
 }

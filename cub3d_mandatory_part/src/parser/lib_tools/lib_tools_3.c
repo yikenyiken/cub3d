@@ -3,24 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:47:29 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/25 16:20:29 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 13:06:28 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/cub3d.h"
 
-void	init_flg(t_flg *flg)
+void	init_flg_and_txt(t_data *data, t_flg *flg)
 {
-	flg->N_flg = 0;
-	flg->S_flg = 0;
-	flg->W_flg = 0;
-	flg->E_flg = 0;
-	flg->F_flg = 0;
-	flg->C_flg = 0;
+	flg->n_flg = 0;
+	flg->s_flg = 0;
+	flg->w_flg = 0;
+	flg->e_flg = 0;
+	flg->f_flg = 0;
+	flg->c_flg = 0;
 	flg->break_flg = 0;
+	data->wall_no_path = NULL;
+	data->wall_so_path = NULL;
+	data->wall_we_path = NULL;
+	data->wall_ea_path = NULL;
 }
 
 char	*get_line(char *s, char c)
@@ -65,26 +69,26 @@ void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c)
 void	increasing_flg(t_flg *flg, char vector)
 {
 	if (vector == 'N')
-		flg->N_flg++;
+		flg->n_flg++;
 	if (vector == 'S')
-		flg->S_flg++;
+		flg->s_flg++;
 	if (vector == 'W')
-		flg->W_flg++;
+		flg->w_flg++;
 	if (vector == 'E')
-		flg->E_flg++;
+		flg->e_flg++;
 	if (vector == 'F')
-		flg->F_flg++;
+		flg->f_flg++;
 	if (vector == 'C')
-		flg->C_flg++;
-	if (flg->N_flg && flg->S_flg && flg->W_flg && flg->E_flg
-		&& flg->F_flg && flg->C_flg)
+		flg->c_flg++;
+	if (flg->n_flg && flg->s_flg && flg->w_flg && flg->e_flg
+		&& flg->f_flg && flg->c_flg)
 		flg->break_flg = 1;
 }
 
 void	check_flags(t_flg *flg)
 {
-	if (flg->N_flg != 1 || flg->S_flg != 1 || flg->W_flg != 1
-		|| flg->E_flg != 1 || flg->F_flg != 1
-		|| flg->C_flg != 1)
+	if (flg->n_flg != 1 || flg->s_flg != 1 || flg->w_flg != 1
+		|| flg->e_flg != 1 || flg->f_flg != 1
+		|| flg->c_flg != 1)
 		ft_error("configuration file is poorly constructed\n");
 }

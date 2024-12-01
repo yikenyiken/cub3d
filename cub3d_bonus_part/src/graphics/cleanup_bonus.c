@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 13:27:19 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:20 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 11:00:32 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	free_parser_allocations(t_mlx *mlx)
 // Cleans all resources used by the game
 void	graceful_exit(t_mlx *mlx, int code)
 {
+	(void)code;
 	free_parser_allocations(mlx);
 	free(mlx->data.rays);
 	mlx_terminate(mlx->ptr);

@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d_bonus.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 17:14:34 by yiken            ###   ########.fr       */
+/*   Created: 2024/12/01 09:53:48 by messkely          #+#    #+#             */
+/*   Updated: 2024/12/01 13:46:32 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef CUB3D_BONUS_H
+# define CUB3D_BONUS_H
 
 # include "../../lib/MLX42/include/MLX42/MLX42.h"
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
-#include <stdio.h>
 
 typedef struct s_flg
 {
-	int	N_flg;
-	int	S_flg;
-	int	W_flg;
-	int	E_flg;
-	int	F_flg;
-	int	C_flg;
+	int	n_flg;
+	int	s_flg;
+	int	w_flg;
+	int	e_flg;
+	int	f_flg;
+	int	c_flg;
 	int	break_flg;
 }	t_flg;
 
@@ -118,19 +117,18 @@ typedef struct s_mlx
 	t_player	player;
 }	t_mlx;
 
-// graphics
-
 void	init_cub3d(t_mlx *mlx);
 void	update_player_on_keypress(t_mlx *mlx);
 void	draw_2d_map(t_mlx *mlx);
 void	draw_3d_map(t_mlx *mlx);
 void	cast_rays(t_mlx *mlx);
+void	free_map(char **map, int rows);
+void	free_txtr_paths(t_data *data);
 void	graceful_exit(t_mlx *mlx, int code);
 
-// parser
-
 void	ft_error(char *s);
-void	init_flg(t_flg *flg);
+void	init_flg_and_txt(t_data *data, t_flg *flg);
+void	free_if_error(t_data *data, char *s, char *str);
 int		check(char *str, char *to_find);
 int		ft_strlen(char *s);
 char	*ft_trim(char *s);

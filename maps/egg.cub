@@ -1,7 +1,7 @@
-NO /Users/yiken/Desktop/mywork/cub3d/wall_textures/wall_north.png
-WE /Users/yiken/Desktop/mywork/cub3d/wall_textures/wall_west.png
-SO /Users/yiken/Desktop/mywork/cub3d/wall_textures/wall_south.png
-EA /Users/yiken/Desktop/mywork/cub3d/wall_textures/wall_east.png
+NO wall_textures/wall_north.png
+WE wall_textures/wall_west.png
+SO wall_textures/wall_south.png
+EA wall_textures/wall_east.png
 C 125, 109, 255
 F 34, 192, 0212
 

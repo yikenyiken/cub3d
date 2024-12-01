@@ -20,7 +20,7 @@ libmlx:
 bonus: libmlx $(NAME_BONUS)
 
 $(NAME_BONUS): $(OBJS_BONUS)
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) $(HEADERS) -o $(NAME_BONUS)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) $(HEADERS) -o $(NAME_BONUS) 
 
 %_bonus.o: %_bonus.c $(INCLUDE_BONUS)
 	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
@@ -52,4 +52,4 @@ install:
 	-@cd ~/goinfre && mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
 	@brew install glfw
 
-.PHONY: clean, libmlx
+.PHONY: clean, libmlx, install
