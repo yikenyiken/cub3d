@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 18:19:39 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 16:08:51 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/01 13:12:01 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ t_ray	*create_rays(t_mlx *mlx, t_data *data);
 void	init_data(t_mlx *mlx, t_data *data)
 {
 	data->fov = 60 * (M_PI / 180);
-	data->screen_width = 1680;
-	data->screen_height = 1250;
-	data->tile_size = 80;
+	data->screen_width = 1600;
+	data->screen_height = 1200;
+	data->tile_size = 50;
 	data->map_width = data->tile_size * data->columns;
 	data->map_height = data->tile_size * data->rows;
 	data->num_rays = data->screen_width;
