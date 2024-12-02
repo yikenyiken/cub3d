@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 17:45:38 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:18:50 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	check_colors(t_data *data, char *file, char c, int idx)
 
 	data->floor_rgb_buf = create_rgb_buf();
 	data->ceiling_rgb_buf = create_rgb_buf();
-	while (file[idx] && (file[idx] == ' ' || file[idx] == '\n'))
+	while (file[idx] && file[idx] == ' ')
 		idx++;
 	line = get_line(file + idx, '\n');
 	if (!line)
