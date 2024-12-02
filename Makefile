@@ -51,13 +51,13 @@ libmlx:
 bonus: libmlx $(NAME_BONUS)
 
 $(NAME_BONUS): $(OBJS_BONUS)
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) $(HEADERS) -o $(NAME_BONUS)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) -o $(NAME_BONUS)
 
 %_bonus.o: %_bonus.c $(INCLUDE_BONUS)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 %.o: %.c $(INCLUDE)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
