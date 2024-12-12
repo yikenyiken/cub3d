@@ -6,11 +6,29 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 09:38:24 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 17:30:02 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:02:27 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/cub3d.h"
+
+char	*ft_strdup(char *s)
+{
+	int		i;
+	char	*p;
+
+	p = malloc((ft_strlen(s) + 1) * sizeof(char));
+	if (!p)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		p[i] = s[i];
+		i++;
+	}
+	p[i] = '\0';
+	return (p);
+}
 
 int	go_back(char *file, int i)
 {

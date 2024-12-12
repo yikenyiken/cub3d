@@ -1,6 +1,6 @@
 NAME			= cub3D
 NAME_BONUS		= cub3D_bonus
-CFLAGS			= -Wextra -Wall -Werror
+CFLAGS			=  -Wextra -Wall -Werror
 LIBMLX			= lib/MLX42
 LIBS			= $(LIBMLX)/build/libmlx42.a -L/Users/$(USER)/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
 HEADERS			= -I $(LIBMLX)/include

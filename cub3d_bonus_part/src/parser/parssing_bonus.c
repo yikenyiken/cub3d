@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 17:09:01 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:02:57 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	find_player_pos(t_mlx *mlx);
 void	verify_texture_paths(t_data *data);
 void	check_blank_lines(t_data *data, char *map);
 void	check_map_dimensions(t_data *data);
+char	*ft_strdup(char *s);
 
 int	is_0_or_dirs(char c)
 {
@@ -78,7 +79,7 @@ void	check_elements(t_data *data, char *map)
 		{
 			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E'
 					&& map[i] != 'W') || p_flg)
-				(free_txtr_paths(data), ft_error("outsider character found\n"));
+				(free(map), free_txtr_paths(data), ft_error("outsider character found\n"));
 			else
 				p_flg = 1;
 		}
@@ -86,7 +87,7 @@ void	check_elements(t_data *data, char *map)
 	}
 	if (map[i] == '\0' && !p_flg)
 	{
-		free_txtr_paths(data);
+		(free_txtr_paths(data), free(map));
 		ft_error("player character missing (N E W S)\n");
 	}
 	check_blank_lines(data, map);
@@ -103,7 +104,7 @@ void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 	init_parse_data(data, data->flg);
 	check_file_is_valid(map_path);
 	var_map = ft_read_file(map_path);
-	map = check_file_elementes(data, var_map, &flg);
+	map = ft_strdup(check_file_elementes(data, var_map, &flg));
 	free(var_map);
 	check_elements(data, map);
 	data->map = ft_split(data, map, '\n');

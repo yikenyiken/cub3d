@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/02 10:19:20 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:54:20 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ static void	parse_color_val(t_data *data, char *line, char c)
 
 	idx = 0;
 	tmp = ft_split(data, line, ',');
-	free(line);
 	if (!tmp)
 		(free_txtr_colors(data), ft_error("error of allocation\n"));
 	while (tmp[idx])

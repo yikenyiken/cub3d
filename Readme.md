@@ -1,1 +1,0 @@
-run `make install; make; make t` to start the game
