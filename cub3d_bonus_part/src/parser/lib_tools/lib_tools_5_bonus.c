@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 08:53:26 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/12 15:56:43 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:20:15 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,12 @@ void	check_blank_lines(t_data *data, char *map)
 		{
 			found_content = 1;
 			if (blank_line)
-				(free(map), free_txtr_paths(data), ft_error("empty line in map\n"));
+				(free(map), free_txtr_paths(data),
+					ft_error("empty line in map\n"));
 		}
 		while (*map && *map != '\n')
 			map++;
-		if (*map == '\n')
-			map++;
+		*map == '\n' && map++;
 	}
 }
 

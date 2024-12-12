@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/12 16:03:06 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:09:55 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ void	check_elements(t_data *data, char *map)
 		{
 			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E'
 					&& map[i] != 'W') || p_flg)
-				(free(map), free_txtr_paths(data), ft_error("outsider character found\n"));
+				(free(map), free_txtr_paths(data),
+					ft_error("outsider character found\n"));
 			else
 				p_flg = 1;
 		}
