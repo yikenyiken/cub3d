@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 08:53:26 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/12 18:19:42 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/31 15:04:09 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ int	is_blank_line(char *map)
 	return (*map == '\n' || *map == '\0');
 }
 
-void	check_blank_lines(t_data *data, char *map)
+void	check_blank_lines(t_data *data, char *map, int blank_line)
 {
 	int	found_content;
-	int	blank_line;
+	char *tmp;
 
 	found_content = 0;
-	blank_line = 0;
+	tmp = map;
 	while (*map && (*map != '\n' || *map == ' '))
 		map++;
 	while (*map)
@@ -79,7 +79,7 @@ void	check_blank_lines(t_data *data, char *map)
 		{
 			found_content = 1;
 			if (blank_line)
-				(free(map), free_txtr_paths(data),
+				(free(tmp),free_txtr_paths(data), 
 					ft_error("empty line in map\n"));
 		}
 		while (*map && *map != '\n')

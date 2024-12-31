@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/31 11:38:50 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/31 15:20:23 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*add_spaces(char *col, int len);
 void	normalize_map(t_data *data);
 void	find_player_pos(t_mlx *mlx);
 void	verify_texture_paths(t_data *data);
-void	check_blank_lines(t_data *data, char *map);
+void	check_blank_lines(t_data *data, char *map, int blank_line);
 
 int	is_0_or_dirs(char c)
 {
@@ -90,9 +90,12 @@ void	check_elements(t_data *data, char *map)
 		(free_txtr_paths(data), free(map));
 		ft_error("player character missing (N E W S)\n");
 	}
-	check_blank_lines(data, map);
+	check_blank_lines(data, map, 0);
 }
-
+void f(void)
+{
+	system("leaks cub3D");
+}
 // Detects any misconfiguration in the config file and gets the retievable data
 void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 {

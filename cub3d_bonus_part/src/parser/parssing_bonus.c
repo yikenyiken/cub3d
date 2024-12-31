@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/31 11:27:05 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/31 15:03:27 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ char	*add_spaces(char *col, int len);
 void	normalize_map(t_data *data);
 void	find_player_pos(t_mlx *mlx);
 void	verify_texture_paths(t_data *data);
-void	check_blank_lines(t_data *data, char *map);
+void	check_blank_lines(t_data *data, char *map, int blank_line);
 void	check_map_dimensions(t_data *data);
-char	*ft_strdup(char *s);
 
 int	is_0_or_dirs(char c)
 {
@@ -91,7 +90,7 @@ void	check_elements(t_data *data, char *map)
 		(free_txtr_paths(data), free(map));
 		ft_error("player character missing (N E W S)\n");
 	}
-	check_blank_lines(data, map);
+	check_blank_lines(data, map, 0);
 }
 
 // Detects any misconfiguration in the config file and gets the retievable data
