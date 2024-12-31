@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 14:51:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 15:24:38 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:11:53 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*ft_trim(char *s)
 		end--;
 	buff = malloc((end - start + 2) * sizeof(char));
 	if (!buff)
-		return (NULL);
+		return (free(s), NULL);
 	i = 0;
 	while (start < end + 1)
 		buff[i++] = s[start++];

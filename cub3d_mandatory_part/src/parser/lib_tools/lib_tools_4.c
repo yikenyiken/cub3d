@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_4.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:46:36 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/25 16:19:51 by yiken            ###   ########.fr       */
+/*   Updated: 2024/12/13 15:45:20 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*add_spaces(char *col, int len)
 
 	buff = malloc((len + 1) * sizeof(char));
 	if (!buff)
-		return (NULL);
+		return (free(col), NULL);
 	i = 0;
 	j = 0;
 	while (i < len)

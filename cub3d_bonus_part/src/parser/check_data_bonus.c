@@ -6,13 +6,14 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/02 10:19:20 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/31 11:39:09 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d_bonus.h"
 
 void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c);
+char	*ft_strdup(char *s);
 
 static int	check_texture(t_data *data, char *file, char vector, int idx)
 {
@@ -63,24 +64,24 @@ static void	check_color_range(t_data *data, char **s, int i, char c)
 		free_if_error(data, s, i, "color value(s) out of range\n");
 }
 
-static void	parse_color_val(t_data *data, char *line, char c)
+static void	parse_color_val(t_data *data, char *line, char c, char *file)
 {
 	int		idx;
 	char	**tmp;
 
 	idx = 0;
 	tmp = ft_split(data, line, ',');
-	free(line);
 	if (!tmp)
-		(free_txtr_colors(data), ft_error("error of allocation\n"));
+		(free(file), free_txtr_colors(data), ft_error("error of allocation\n"));
 	while (tmp[idx])
 		idx++;
 	if (idx != 3)
 	{
-		free_map(tmp, idx);
+		(free_map(tmp, idx), free(file));
 		free_txtr_colors(data);
 		ft_error("Color format syntax error.\n");
 	}
+	data->file = file;
 	idx = 0;
 	while (idx < 3)
 	{
@@ -102,9 +103,9 @@ int	check_colors(t_data *data, char *file, char c, int idx)
 		idx++;
 	line = get_line(file + idx, '\n');
 	if (!line)
-		(free_txtr_colors(data), ft_error("error of allocation\n"));
+		(free(file), free_txtr_colors(data), ft_error("error of allocation\n"));
 	idx += ft_strlen(line);
-	parse_color_val(data, line, c);
+	parse_color_val(data, line, c, file);
 	increasing_flg(data->flg, c);
 	if (c == 'F')
 		convert_rgb_to_hex(data, data->floor_rgb_buf, 'F');
@@ -141,5 +142,5 @@ char	*check_file_elementes(t_data *data, char *file, t_flg *flg)
 	}
 	if (file[i] == '1')
 		i = go_back(file, i);
-	return (check_flags(flg), file + i);
+	return (check_flags(flg), ft_strdup(file + i));
 }

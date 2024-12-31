@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 09:53:48 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 17:27:19 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/31 11:21:16 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_data
 	double		fov;
 	int			num_rays;
 	char		**map;
+	char		*file;
 	t_ray		*rays;
 	uint32_t	ceiling_color;
 	uint32_t	floor_color;

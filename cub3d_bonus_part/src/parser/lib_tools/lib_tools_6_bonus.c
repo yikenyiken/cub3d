@@ -6,11 +6,29 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 09:46:56 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 17:34:11 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/31 11:23:35 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/cub3d_bonus.h"
+
+char	*ft_strdup(char *s)
+{
+	int		i;
+	char	*p;
+
+	p = malloc((ft_strlen(s) + 1) * sizeof(char));
+	if (!p)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		p[i] = s[i];
+		i++;
+	}
+	p[i] = '\0';
+	return (p);
+}
 
 int	go_back(char *file, int i)
 {
@@ -48,6 +66,7 @@ void	check_map_dimensions(t_data *data)
 
 void	free_if_error(t_data *data, char **s, int idx, char *str)
 {
+	free(data->file);
 	free_txtr_colors(data);
 	while (idx < 3)
 		free(s[idx++]);

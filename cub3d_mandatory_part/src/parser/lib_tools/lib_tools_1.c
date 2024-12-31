@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 10:22:47 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 13:09:20 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:54:37 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ char	**ft_split(t_data *data, char *s, char c)
 		data->rows = size;
 	arr = malloc((size + 1) * sizeof(char *));
 	if (!arr)
-		return (NULL);
+		return (free(s), NULL);
 	i = 0;
 	j = 0;
 	while (s[i] && j < size)
@@ -102,9 +102,10 @@ char	**ft_split(t_data *data, char *s, char c)
 			i++;
 		arr[j] = ft_substr(s, c, &i);
 		if (!arr[j])
-			return (free_txtr_paths(data), free_buff(arr, j));
+			return (free(s), free_txtr_paths(data), free_buff(arr, j));
 		j++;
 	}
+	free(s);
 	arr[j] = NULL;
 	return (arr);
 }

@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 17:09:01 by messkely         ###   ########.fr       */
+/*   Updated: 2024/12/31 11:38:50 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,14 @@ char	*ft_read_file(char *map_path)
 	close(fd);
 	if (count == 0)
 		ft_error("configuration file is empty\n");
-	map = (char *)malloc((count + 1) * sizeof(char));
+	map = malloc((count + 1) * sizeof(char));
 	if (!map)
 		ft_error("Memory allocation failure\n");
 	fd = open(map_path, O_RDONLY);
 	if (fd < 0)
 		(free(map), ft_error("cannot read configuration file\n"));
-	read(fd, map, count);
+	if (read(fd, map, count) == -1)
+		(free(map), close(fd), ft_error("cannot read configuration file\n"));
 	map[count] = '\0';
 	return (close(fd), map);
 }
@@ -77,7 +78,8 @@ void	check_elements(t_data *data, char *map)
 		{
 			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E'
 					&& map[i] != 'W') || p_flg)
-				(free_txtr_paths(data), ft_error("outsider character found\n"));
+				(free(map), free_txtr_paths(data),
+					ft_error("outsider character found\n"));
 			else
 				p_flg = 1;
 		}
@@ -85,7 +87,7 @@ void	check_elements(t_data *data, char *map)
 	}
 	if (map[i] == '\0' && !p_flg)
 	{
-		free_txtr_paths(data);
+		(free_txtr_paths(data), free(map));
 		ft_error("player character missing (N E W S)\n");
 	}
 	check_blank_lines(data, map);
