@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 09:53:48 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/31 11:21:16 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/02 11:54:54 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ typedef struct s_player
 	double		mini_x;
 	double		mini_y;
 	double		angle;
-	double		new_angle;
+	double		move_angle;
 	int			radius;
 	double		move_step;
 	double		mini_move_step;

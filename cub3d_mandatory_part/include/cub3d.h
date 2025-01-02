@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/12/31 11:19:29 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/02 12:00:07 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
+
+# define RIGHT_ANGLE M_PI / 2
 
 # include "../../lib/MLX42/include/MLX42/MLX42.h"
 # include <unistd.h>
@@ -94,7 +96,7 @@ typedef struct s_player
 	double		x;
 	double		y;
 	double		angle;
-	double		new_angle;
+	double		move_angle;
 	double		move_step;
 	double		rotation_step;
 	int			is_moving;

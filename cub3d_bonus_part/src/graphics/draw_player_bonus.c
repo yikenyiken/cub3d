@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 12:42:02 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:20 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/02 12:00:29 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	draw_right_arm(t_mlx *mlx)
 	i = 0;
 	while (i < (int)mlx->player.radius)
 	{
-		waist_right_x = mlx->player.mini_x + cos(mlx->player.angle + M_PI / 2)
+		waist_right_x = mlx->player.mini_x + cos(mlx->player.angle + RIGHT_ANGLE)
 			* mlx->player.radius;
-		waist_right_y = mlx->player.mini_y + sin(mlx->player.angle + M_PI / 2)
+		waist_right_y = mlx->player.mini_y + sin(mlx->player.angle + RIGHT_ANGLE)
 			* mlx->player.radius;
 		x = waist_right_x + i * cos(mlx->player.angle);
 		y = waist_right_y + i * sin(mlx->player.angle);
@@ -47,9 +47,9 @@ void	draw_left_arm(t_mlx *mlx)
 	i = 0;
 	while (i < (int)mlx->player.radius)
 	{
-		waist_left_x = mlx->player.mini_x + cos(mlx->player.angle - M_PI / 2)
+		waist_left_x = mlx->player.mini_x + cos(mlx->player.angle - RIGHT_ANGLE)
 			* mlx->player.radius;
-		waist_left_y = mlx->player.mini_y + sin(mlx->player.angle - M_PI / 2)
+		waist_left_y = mlx->player.mini_y + sin(mlx->player.angle - RIGHT_ANGLE)
 			* mlx->player.radius;
 		x = waist_left_x + i * cos(mlx->player.angle);
 		y = waist_left_y + i * sin(mlx->player.angle);

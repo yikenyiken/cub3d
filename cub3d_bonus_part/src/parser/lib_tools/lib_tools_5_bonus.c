@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_5_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 08:53:26 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/31 15:04:04 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/02 12:00:29 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	check_player_angle(t_player *player, char dir)
 	if (dir == 'N')
 		player->angle = (3 * M_PI) / 2;
 	else if (dir == 'S')
-		player->angle = M_PI / 2;
+		player->angle = RIGHT_ANGLE;
 	else if (dir == 'E')
 		player->angle = 0.0;
 	else if (dir == 'W')

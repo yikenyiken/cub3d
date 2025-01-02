@@ -6,13 +6,13 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:59:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:20 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/02 12:04:09 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d_bonus.h"
 
-void	virtual_player_move(t_player *player, double new_angle);
+void	set_move_attributes(t_player *player, double move_angle);
 
 void	game_exit_listen(t_mlx *mlx)
 {
@@ -26,13 +26,13 @@ void	vert_move_listen(t_mlx *mlx, t_player *player)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_A)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
 	{
-		virtual_player_move(player, player->angle);
+		set_move_attributes(player, player->angle);
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_A)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_D)))
 	{
-		virtual_player_move(player, player->angle + M_PI);
+		set_move_attributes(player, player->angle + M_PI);
 	}
 }
 
@@ -42,13 +42,13 @@ void	horz_move_listen(t_mlx *mlx, t_player *player)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)))
 	{
-		virtual_player_move(player, player->angle + M_PI / 2);
+		set_move_attributes(player, player->angle + RIGHT_ANGLE);
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_A)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)))
 	{
-		virtual_player_move(player, player->angle - M_PI / 2);
+		set_move_attributes(player, player->angle - RIGHT_ANGLE);
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_RIGHT))
 		mlx->player.angle += mlx->player.rotation_step;
@@ -61,12 +61,12 @@ void	up_diagonal_move_listen(t_mlx *mlx, t_player *player)
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_D))
 	{
-		virtual_player_move(player, player->angle + (M_PI / 2) / 2);
+		set_move_attributes(player, player->angle + RIGHT_ANGLE / 2);
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_A))
 	{
-		virtual_player_move(player, player->angle - (M_PI / 2) / 2);
+		set_move_attributes(player, player->angle - RIGHT_ANGLE / 2);
 	}
 }
 
@@ -75,11 +75,11 @@ void	down_diagonal_move_listen(t_mlx *mlx, t_player *player)
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_D))
 	{
-		virtual_player_move(player, player->angle + M_PI - (M_PI / 2 / 2));
+		set_move_attributes(player, player->angle + M_PI - (RIGHT_ANGLE / 2));
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_A))
 	{
-		virtual_player_move(player, player->angle + M_PI + (M_PI / 2 / 2));
+		set_move_attributes(player, player->angle + M_PI + (RIGHT_ANGLE / 2));
 	}
 }
