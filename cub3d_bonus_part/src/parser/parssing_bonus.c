@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/31 15:03:27 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/02 18:04:16 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 	free(var_map);
 	check_elements(data, map);
 	data->map = ft_split(data, map, '\n');
+	if (!data->map)
+		ft_error("Memory allocation failure\n");
 	check_walls(data, data->map);
 	check_map_dimensions(data);
 	find_player_pos(mlx);

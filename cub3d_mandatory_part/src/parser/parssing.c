@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/31 15:20:23 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/02 18:07:42 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,7 @@ void	check_elements(t_data *data, char *map)
 	}
 	check_blank_lines(data, map, 0);
 }
-void f(void)
-{
-	system("leaks cub3D");
-}
+
 // Detects any misconfiguration in the config file and gets the retievable data
 void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 {
@@ -111,6 +108,8 @@ void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 	free(var_map);
 	check_elements(data, map);
 	data->map = ft_split(data, map, '\n');
+	if (!data->map)
+		ft_error("Memory allocation failure\n");
 	check_walls(data, data->map);
 	find_player_pos(mlx);
 	normalize_map(data);

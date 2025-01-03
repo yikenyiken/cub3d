@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 10:16:45 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/31 13:08:54 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:01:00 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c);
 char	*ft_strdup(char *s);
+char	**ft_split_colors(t_data *data, char *s, char c);
 
 static int	check_texture(t_data *data, char *file, char vector, int idx)
 {
@@ -70,24 +71,23 @@ static void	parse_color_val(t_data *data, char *line, char c, char *file)
 	char	**tmp;
 
 	idx = 0;
-	tmp = ft_split(data, line, ',');
+	tmp = ft_split_colors(data, line, ',');
 	if (!tmp)
-		(free(file), free_txtr_colors(data), ft_error("error of allocation\n"));
+		(free(file), free(data->ceiling_rgb_buf),
+			free(data->floor_rgb_buf), ft_error("error of allocation\n"));
 	while (tmp[idx])
 		idx++;
 	if (idx != 3)
 	{
-		(free_map(tmp, idx), free(file));
-		free_txtr_colors(data);
+		(free_map(tmp, idx), free(file), free_txtr_colors(data));
 		ft_error("Color format syntax error.\n");
 	}
-	data->file = file;
 	idx = 0;
+	data->file = file;
 	while (idx < 3)
 	{
 		tmp[idx] = ft_trim(tmp[idx]);
-		check_color_range(data, tmp, idx, c);
-		free(tmp[idx]);
+		(check_color_range(data, tmp, idx, c), free(tmp[idx]));
 		idx++;
 	}
 	free(tmp);

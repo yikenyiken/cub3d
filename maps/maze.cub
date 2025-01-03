@@ -1,6 +1,6 @@
 
 WE               wall_textures/wall_west.png        
-F 0, 179, 045
+F 0, 179, 045  
 NO wall_textures/wall_north.png
 C 12,34 , 99
 

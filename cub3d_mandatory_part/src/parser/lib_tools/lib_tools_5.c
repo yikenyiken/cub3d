@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_5.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 08:53:26 by messkely          #+#    #+#             */
-/*   Updated: 2025/01/02 12:00:29 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/03 21:26:42 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	check_player_angle(t_player *player, char dir)
 	if (dir == 'N')
 		player->angle = (3 * M_PI) / 2;
 	else if (dir == 'S')
-		player->angle = RIGHT_ANGLE;
+		player->angle = M_PI / 2;
 	else if (dir == 'E')
 		player->angle = 0.0;
 	else if (dir == 'W')
@@ -61,8 +61,8 @@ int	is_blank_line(char *map)
 
 void	check_blank_lines(t_data *data, char *map, int blank_line)
 {
-	int	found_content;
-	char *tmp;
+	int		found_content;
+	char	*tmp;
 
 	found_content = 0;
 	tmp = map;
@@ -79,7 +79,7 @@ void	check_blank_lines(t_data *data, char *map, int blank_line)
 		{
 			found_content = 1;
 			if (blank_line)
-				(free(tmp),free_txtr_paths(data), 
+				(free(tmp), free_txtr_paths(data),
 					ft_error("empty line in map\n"));
 		}
 		while (*map && *map != '\n')
