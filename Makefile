@@ -1,6 +1,6 @@
 NAME			= cub3D
 NAME_BONUS		= cub3D_bonus
-CFLAGS			=  -Wextra -Wall -Werror -g
+CFLAGS			=  -Wextra -Wall -Werror
 LIBMLX			= lib/MLX42
 LIBS			= $(LIBMLX)/build/libmlx42.a -L/Users/$(USER)/goinfre/homebrew/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
 HEADERS			= -I $(LIBMLX)/include
@@ -44,24 +44,24 @@ SRCS_BONUS		= cub3d_bonus_part/src/cub3d_bonus.c $(GRAPHICS_BON)/update_player_b
  				  $(PARSER_BON)/lib_tools/lib_tools_7_bonus.c
 OBJS_BONUS		= ${SRCS_BONUS:.c=.o}
 
-all: libmlx $(NAME)
+all	: libmlx $(NAME)
 
 libmlx:
-	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
+	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build
 
 bonus: libmlx $(NAME_BONUS)
 
 $(NAME_BONUS): $(OBJS_BONUS)
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) -o $(NAME_BONUS)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) -o $(NAME_BONUS)
 
 %_bonus.o: %_bonus.c $(INCLUDE_BONUS)
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 %.o: %.c $(INCLUDE)
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 clean:
 	@rm -rf $(OBJS) $(OBJS_BONUS)
@@ -80,5 +80,6 @@ b: $(NAME_BONUS)
 	@./$< $(MAP)
 
 install:
-	-@git clone https://github.com/codam-coding-college/MLX42.git lib/MLX42
-.PHONY: clean, libmlx, install
+	@git clone https://github.com/codam-coding-college/MLX42.git lib/MLX42
+
+.PHONY:  clean libmlx install

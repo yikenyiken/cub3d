@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:59:51 by yiken             #+#    #+#             */
-/*   Updated: 2025/01/02 12:04:09 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/04 14:58:29 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ void	horz_move_listen(t_mlx *mlx, t_player *player)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)))
 	{
-		set_move_attrs(player, player->angle + RIGHT_ANGLE);
+		set_move_attrs(player, player->angle + (M_PI / 2));
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_A)
 		&& (!mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 			&& !mlx_is_key_down(mlx->ptr, MLX_KEY_S)))
 	{
-		set_move_attrs(player, player->angle - RIGHT_ANGLE);
+		set_move_attrs(player, player->angle - (M_PI / 2));
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_RIGHT))
 		mlx->player.angle += mlx->player.rotation_step;
@@ -61,12 +61,12 @@ void	up_diagonal_move_listen(t_mlx *mlx, t_player *player)
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_D))
 	{
-		set_move_attrs(player, player->angle + RIGHT_ANGLE / 2);
+		set_move_attrs(player, player->angle + (M_PI / 2) / 2);
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_W)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_A))
 	{
-		set_move_attrs(player, player->angle - RIGHT_ANGLE / 2);
+		set_move_attrs(player, player->angle - (M_PI / 2) / 2);
 	}
 }
 
@@ -75,11 +75,11 @@ void	down_diagonal_move_listen(t_mlx *mlx, t_player *player)
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_D))
 	{
-		set_move_attrs(player, player->angle + M_PI - (RIGHT_ANGLE / 2));
+		set_move_attrs(player, player->angle + M_PI - ((M_PI / 2) / 2));
 	}
 	if (mlx_is_key_down(mlx->ptr, MLX_KEY_S)
 		&& mlx_is_key_down(mlx->ptr, MLX_KEY_A))
 	{
-		set_move_attrs(player, player->angle + M_PI + (RIGHT_ANGLE / 2));
+		set_move_attrs(player, player->angle + M_PI + ((M_PI / 2) / 2));
 	}
 }

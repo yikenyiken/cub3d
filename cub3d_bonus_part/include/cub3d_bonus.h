@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 09:53:48 by messkely          #+#    #+#             */
-/*   Updated: 2025/01/04 11:32:22 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:59:16 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_BONUS_H
 # define CUB3D_BONUS_H
-
-# define RIGHT_ANGLE M_PI / 2
 
 # include "../../lib/MLX42/include/MLX42/MLX42.h"
 # include <unistd.h>

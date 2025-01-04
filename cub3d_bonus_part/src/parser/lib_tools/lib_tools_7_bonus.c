@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_7_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 11:56:35 by messkely          #+#    #+#             */
-/*   Updated: 2025/01/04 12:07:28 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:39:59 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,15 @@ char	**ft_split_colors(t_data *data, char *s, char c)
 	while (s[i] && j < 3 && flg < 2)
 	{
 		if (s[i] && s[i] == c)
-			(i++, flg++);
+		{
+			flg++;
+			i++;
+		}
 		while (s[i] && s[i] == ' ')
 			i++;
 		arr[j] = ft_substr(s, c, &i, j);
-		if (!arr[j])
-			return (free(s), free_txtr_paths(data), free_buff(arr, j));
-		j++;
+		if (!arr[j++])
+			return (free(s), free_txtr_paths(data), free_buff(arr, --j));
 	}
 	return (free(s), arr[j] = NULL, arr);
 }
