@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 12:49:48 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:20 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/04 14:58:08 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	find_horz_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
 	int	ray_facing_right;
 
 	ray_facing_up = ray_angle > M_PI;
-	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
+	ray_facing_right = ray_angle < M_PI / 2 || ray_angle > 3 * (M_PI / 2);
 	ray->y_intercept = floor(mlx->player.y / mlx->data.tile_size)
 		* mlx->data.tile_size;
 	if (!ray_facing_up)
@@ -63,7 +63,7 @@ void	set_vert_intersect_xy(t_ray *ray, double ray_angle, t_mlx *mlx)
 {
 	int		ray_facing_right;
 
-	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
+	ray_facing_right = ray_angle < M_PI / 2 || ray_angle > 3 * (M_PI / 2);
 	ray->vert_intersect_x = ray->x_intercept;
 	ray->vert_intersect_y = ray->y_intercept;
 	while ((ray->vert_intersect_x >= 0
@@ -85,7 +85,7 @@ void	find_vert_intersection(t_ray *ray, double ray_angle, t_mlx *mlx)
 	int	ray_facing_right;
 
 	ray_facing_up = ray_angle > M_PI;
-	ray_facing_right = ray_angle < (M_PI / 2) || ray_angle > 3 * (M_PI / 2);
+	ray_facing_right = ray_angle < M_PI / 2 || ray_angle > 3 * (M_PI / 2);
 	ray->x_intercept = floor(mlx->player.x / mlx->data.tile_size)
 		* mlx->data.tile_size;
 	if (ray_facing_right)

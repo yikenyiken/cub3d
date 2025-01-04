@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 10:22:47 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 13:08:43 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/04 12:04:35 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	get_size(char *s, char c)
 	return (count);
 }
 
-static char	*ft_substr(char *s, char c, int *start)
+char	*ft_substr(char *s, char c, int *start, int idx)
 {
 	int		end;
 	char	*arr;
@@ -63,14 +63,14 @@ static char	*ft_substr(char *s, char c, int *start)
 	end = *start;
 	while (s[end] && s[end] != c)
 		end++;
+	while (s[end] && c == ',' && idx == 2 && s[end] != '\n')
+		end++;
 	arr = malloc((end - *start + 1) * sizeof(char));
 	if (!arr)
 		return (NULL);
 	i = 0;
-	end = *start;
-	while (s[end] && s[end] != c)
-		arr[i++] = s[end++];
-	*start = end;
+	while (s[*start] && *start < end)
+		arr[i++] = s[(*start)++];
 	return (arr[i] = '\0', arr);
 }
 
@@ -78,6 +78,7 @@ char	**free_buff(char **buff, int len)
 {
 	while (len >= 0)
 		free(buff[len--]);
+	free(buff);
 	return (NULL);
 }
 
@@ -93,18 +94,17 @@ char	**ft_split(t_data *data, char *s, char c)
 		data->rows = size;
 	arr = malloc((size + 1) * sizeof(char *));
 	if (!arr)
-		return (NULL);
+		return (free(s), free_txtr_paths(data), NULL);
 	i = 0;
 	j = 0;
 	while (s[i] && j < size)
 	{
 		while (s[i] && (s[i] == c || s[i] == ' '))
 			i++;
-		arr[j] = ft_substr(s, c, &i);
+		arr[j] = ft_substr(s, c, &i, j);
 		if (!arr[j])
-			return (free_txtr_paths(data), free_buff(arr, j));
+			return (free(s), free_txtr_paths(data), free_buff(arr, j));
 		j++;
 	}
-	arr[j] = NULL;
-	return (arr);
+	return (free(s), arr[j] = NULL, arr);
 }

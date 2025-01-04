@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:47:14 by yiken             #+#    #+#             */
-/*   Updated: 2024/12/01 17:27:09 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:55:13 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_data
 	double		fov;
 	int			num_rays;
 	char		**map;
+	char		*file;
 	t_ray		*rays;
 	uint32_t	ceiling_color;
 	uint32_t	floor_color;
@@ -93,7 +94,7 @@ typedef struct s_player
 	double		x;
 	double		y;
 	double		angle;
-	double		new_angle;
+	double		move_angle;
 	double		move_step;
 	double		rotation_step;
 	int			is_moving;

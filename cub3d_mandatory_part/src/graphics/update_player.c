@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 20:50:58 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/26 21:52:24 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/02 11:54:54 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	down_diagonal_move_listen(t_mlx *mlx, t_player *player);
 void	game_exit_listen(t_mlx *mlx);
 int		is_wall_hit(t_mlx *mlx, double x, double y);
 
-void	set_move_attrs(t_player *player, double new_angle)
+void	set_move_attrs(t_player *player, double move_angle)
 {
 	player->is_moving = 1;
-	player->new_angle = new_angle;
+	player->move_angle = move_angle;
 }
 
 void	set_player_xy(t_player *player, double x, double y)
@@ -39,8 +39,8 @@ void	update_player_by_events(t_mlx *mlx, t_player *player)
 	if (!player->is_moving)
 		return ;
 	player->is_moving = 0;
-	new_x = player->x + cos(player->new_angle) * player->move_step;
-	new_y = player->y + sin(player->new_angle) * player->move_step;
+	new_x = player->x + cos(player->move_angle) * player->move_step;
+	new_y = player->y + sin(player->move_angle) * player->move_step;
 	set_player_xy(&mlx->player, new_x, new_y);
 }
 

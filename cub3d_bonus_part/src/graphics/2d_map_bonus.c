@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 18:38:44 by yiken             #+#    #+#             */
-/*   Updated: 2024/11/29 17:16:55 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/04 16:12:57 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ void	draw_player(t_mlx *mlx);
 
 int	is_border_pixel(int tile_size, int x, int y)
 {
-	if (!(tile_size - 1 - (x % tile_size))
-		|| !(tile_size - 1 - (y % tile_size)))
+	if ((tile_size - 1) == (x % tile_size)
+		|| (tile_size - 1) == (y % tile_size))
 		return (1);
 	return (0);
 }

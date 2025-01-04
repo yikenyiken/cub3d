@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools_4.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:46:36 by messkely          #+#    #+#             */
-/*   Updated: 2024/11/25 16:19:51 by yiken            ###   ########.fr       */
+/*   Updated: 2025/01/04 11:28:55 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check(char *str, char *to_find)
 	return (0);
 }
 
-char	*add_spaces(char *col, int len)
+char	*add_spaces(t_data *data, char *col, int len)
 {
 	int		i;
 	int		j;
@@ -36,7 +36,10 @@ char	*add_spaces(char *col, int len)
 
 	buff = malloc((len + 1) * sizeof(char));
 	if (!buff)
-		return (NULL);
+	{
+		free_game(data);
+		ft_error("Memory allocation failure\n");
+	}
 	i = 0;
 	j = 0;
 	while (i < len)
@@ -58,7 +61,7 @@ void	normalize_map(t_data *data)
 	i = 0;
 	while (data->map[i])
 	{
-		data->map[i] = add_spaces(data->map[i], data->columns);
+		data->map[i] = add_spaces(data, data->map[i], data->columns);
 		i++;
 	}
 	data->map[i] = NULL;

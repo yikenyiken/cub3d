@@ -6,18 +6,17 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2024/12/01 17:09:01 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/04 12:02:09 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d_bonus.h"
 
 void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c);
-char	*add_spaces(char *col, int len);
 void	normalize_map(t_data *data);
 void	find_player_pos(t_mlx *mlx);
 void	verify_texture_paths(t_data *data);
-void	check_blank_lines(t_data *data, char *map);
+void	check_blank_lines(t_data *data, char *map, int blank_line);
 void	check_map_dimensions(t_data *data);
 
 int	is_0_or_dirs(char c)
@@ -78,7 +77,8 @@ void	check_elements(t_data *data, char *map)
 		{
 			if ((map[i] != 'N' && map[i] != 'S' && map[i] != 'E'
 					&& map[i] != 'W') || p_flg)
-				(free_txtr_paths(data), ft_error("outsider character found\n"));
+				(free(map), free_txtr_paths(data),
+					ft_error("outsider character found\n"));
 			else
 				p_flg = 1;
 		}
@@ -86,10 +86,10 @@ void	check_elements(t_data *data, char *map)
 	}
 	if (map[i] == '\0' && !p_flg)
 	{
-		free_txtr_paths(data);
+		(free_txtr_paths(data), free(map));
 		ft_error("player character missing (N E W S)\n");
 	}
-	check_blank_lines(data, map);
+	check_blank_lines(data, map, 0);
 }
 
 // Detects any misconfiguration in the config file and gets the retievable data
@@ -107,6 +107,8 @@ void	process_config_file(t_mlx *mlx, char *map_path, t_data *data)
 	free(var_map);
 	check_elements(data, map);
 	data->map = ft_split(data, map, '\n');
+	if (!data->map)
+		ft_error("Memory allocation failure\n");
 	check_walls(data, data->map);
 	check_map_dimensions(data);
 	find_player_pos(mlx);
