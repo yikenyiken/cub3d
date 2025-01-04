@@ -6,14 +6,13 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 09:54:51 by messkely          #+#    #+#             */
-/*   Updated: 2025/01/02 18:04:16 by messkely         ###   ########.fr       */
+/*   Updated: 2025/01/04 12:02:09 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d_bonus.h"
 
 void	convert_rgb_to_hex(t_data *data, int color_buff[3], char c);
-char	*add_spaces(char *col, int len);
 void	normalize_map(t_data *data);
 void	find_player_pos(t_mlx *mlx);
 void	verify_texture_paths(t_data *data);

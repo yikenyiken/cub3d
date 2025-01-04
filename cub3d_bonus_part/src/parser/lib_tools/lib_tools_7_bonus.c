@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/03 21:10:17 by messkely          #+#    #+#             */
-/*   Updated: 2025/01/03 21:25:48 by messkely         ###   ########.fr       */
+/*   Created: 2025/01/04 11:56:35 by messkely          #+#    #+#             */
+/*   Updated: 2025/01/04 12:07:28 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ char	**ft_split_colors(t_data *data, char *s, char c)
 
 	arr = malloc((3 + 1) * sizeof(char *));
 	if (!arr)
-		return (free(s), NULL);
+		return (free(s), free_txtr_paths(data), NULL);
 	flg = 0;
 	i = 0;
 	j = 0;
 	while (s[i] && j < 3 && flg < 2)
 	{
-		if (s[i] && s[i] == c && flg++)
-			i++;
+		if (s[i] && s[i] == c)
+			(i++, flg++);
 		while (s[i] && s[i] == ' ')
 			i++;
 		arr[j] = ft_substr(s, c, &i, j);

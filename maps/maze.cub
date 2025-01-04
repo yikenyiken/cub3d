@@ -1,6 +1,6 @@
 
 WE               wall_textures/wall_west.png        
-F 0, 179, 045  
+F 0 ,179, 045     
 NO wall_textures/wall_north.png
 C 12,34 , 99
 
@@ -9,10 +9,6 @@ C 12,34 , 99
 
 SO wall_textures/wall_south.png
 EA wall_textures/wall_east.png
-
-
-
-
         111111111111111111111111111
         1000000000110000000000001
         1011000001110000000000001
